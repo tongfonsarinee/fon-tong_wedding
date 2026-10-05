@@ -1,0 +1,91 @@
+/* ==========================================================================
+   Floating UI & decorative effects — dock, toast, progress bar,
+   petals, tap hearts, confetti
+   Behaviour: js/dock.js, js/effects.js, js/scroll.js, js/intro.js
+   ========================================================================== */
+
+/* ---------- Bottom dock ---------- */
+.dock {
+  position: fixed; z-index: 8; left: 50%; bottom: max(12px, env(safe-area-inset-bottom));
+  width: min(408px, calc(100% - 24px));
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  padding: 6px; border-radius: 24px;
+  background: rgba(255, 250, 245, .78); border: 1px solid rgba(255, 255, 255, .95);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4); backdrop-filter: blur(16px) saturate(1.4);
+  box-shadow: 0 0 0 1px rgba(190, 151, 94, .22), 0 18px 40px -16px rgba(125, 56, 24, .6);
+  transform: translate(-50%, 140%); transition: transform .5s cubic-bezier(.3, .9, .3, 1);
+}
+.dock.is-shown { transform: translate(-50%, 0); }
+.dock__btn {
+  min-height: 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  border: 0; border-radius: 18px; background: none; color: var(--muted);
+  font-family: inherit; font-size: 11px; font-weight: 400; cursor: pointer;
+  transition: background .25s, color .25s;
+}
+.dock__btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.dock__btn.is-active { color: #FFF4E4; background: linear-gradient(140deg, #8A4321, #5A2A14); box-shadow: inset 0 0 0 1px rgba(230, 207, 158, .5); }
+.dock__btn.is-active svg { stroke: var(--gold-soft); }
+.dock__btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed; z-index: 30; left: 50%; bottom: 96px; transform: translate(-50%, 20px);
+  padding: 10px 18px; border-radius: 999px; background: rgba(74, 36, 20, .94); color: #FFF4E4;
+  font-size: 13px; opacity: 0; pointer-events: none; transition: opacity .3s, transform .3s;
+}
+.toast.is-shown { opacity: 1; transform: translate(-50%, 0); }
+
+/* ---------- Scroll progress ---------- */
+.progress {
+  position: fixed; z-index: 9; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, #EAC2B8, #E8D19B, #FFF6DE, #BE975E, #C98476);
+  transform-origin: 0 50%; transform: scaleX(0);
+}
+
+/* ---------- Falling petals + gold dust ---------- */
+.petals { position: fixed; inset: 0; z-index: 5; pointer-events: none; overflow: hidden; }
+.petal {
+  position: absolute; top: -30px;
+  width: var(--size, 12px); height: calc(var(--size, 12px) * .8);
+  border-radius: 150% 0 150% 0;
+  background: linear-gradient(135deg, #F8DDD5, #D99A8C);
+  opacity: .75;
+  animation: fall var(--dur, 12s) linear var(--delay, 0s) infinite;
+}
+.petal--light { background: linear-gradient(135deg, #FFFFFF, #F1D0C7); opacity: .9; }
+.petal--gold { height: var(--size, 4px); border-radius: 50%; background: #FFF6DE; box-shadow: 0 0 5px 1px rgba(214, 178, 110, .95); opacity: .9; }
+
+/* ---------- Tap hearts ---------- */
+.heart {
+  position: fixed; z-index: 25; pointer-events: none; line-height: 1;
+  font-size: var(--size, 16px); color: var(--color, #C98476);
+  animation: heartUp var(--dur, 1.2s) ease-out forwards;
+}
+
+/* ---------- Confetti (gold foil + blush paper) ---------- */
+.confetti {
+  position: fixed; z-index: 25; pointer-events: none;
+  width: var(--w, 7px); height: var(--h, 12px); border-radius: 2px;
+  background: var(--color, #E8D19B);
+  animation: confetti var(--dur, 1.6s) cubic-bezier(.2, .6, .35, 1) forwards;
+}
+
+@keyframes fall {
+  0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  100% { transform: translate3d(var(--drift, 60px), 110vh, 0) rotate(var(--spin, 540deg)); }
+}
+@keyframes heartUp {
+  0% { transform: translate(-50%, -50%) scale(.4); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--dx, 0px)), calc(-50% - var(--dy, 90px))) scale(1.1) rotate(var(--rot, 0deg)); opacity: 0; }
+}
+@keyframes confetti {
+  0% { transform: translate(-50%, -50%) rotate(0deg) scale(.6); opacity: 1; }
+  35% { transform: translate(calc(-50% + var(--dx, 0px) * .6), calc(-50% - var(--up, 120px))) rotate(calc(var(--spin, 360deg) * .4)) scale(1); opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--dx, 0px)), calc(-50% + var(--down, 160px))) rotate(var(--spin, 360deg)) scale(.9); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dock { transition: none; }
+  .petals, .heart, .confetti { display: none; }
+}

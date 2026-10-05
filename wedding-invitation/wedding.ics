@@ -1,0 +1,28 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Wedding E-Card//TH
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:wedding-sarinee-pongsawat-20261122@ecard
+DTSTAMP:20261005T000000Z
+DTSTART:20261122T000900Z
+DTEND:20261122T060000Z
+SUMMARY:งานมงคลสมรส ฝน & โต้ง (Sarinee & 
+ Pongsawat)
+LOCATION:บ้านเลขที่ 246 ม.5 ต.รอบเมือ
+ ง อ.เมือง จ.ร้อยเอ็ด
+GEO:16.042557;103.659509
+DESCRIPTION:07.09 น. พิธีสงฆ์\n08.09 น. พิธีแ
+ ห่ขันหมาก\n09.09 น. บายศรีสู่ขว
+ ัญ\n10.30 น. รับประทานอาหาร\nแผน
+ ที่ https://maps.app.goo.gl/nRfCRox617bbrhkU9
+URL:https://maps.app.goo.gl/nRfCRox617bbrhkU9
+BEGIN:VALARM
+TRIGGER:-P1D
+ACTION:DISPLAY
+DESCRIPTION:พรุ่งนี้งานแต่งฝน & โต้
+ ง
+END:VALARM
+END:VEVENT
+END:VCALENDAR

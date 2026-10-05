@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>สร้างลิงก์การ์ดเชิญ · ฝน &amp; โต้ง</title>
+<link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai+Looped:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --wine: #4A2414; --burgundy: #7D3818; --gold: #BE975E; --cream: #FFFAF5; --sand: #F1D0C7; --muted: #8A6450; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--cream); color: var(--wine); font-family: 'IBM Plex Sans Thai Looped', sans-serif; font-weight: 300; }
+  main { max-width: 640px; margin: 0 auto; padding: 32px 16px 64px; display: flex; flex-direction: column; gap: 18px; }
+  h1 { margin: 0; font-weight: 500; font-size: 24px; }
+  p { margin: 0; color: var(--muted); line-height: 1.7; font-size: 14px; }
+  textarea { width: 100%; min-height: 180px; padding: 14px; border: 1px solid var(--sand); border-radius: 12px; font: inherit; font-size: 16px; color: var(--wine); background: #fff; resize: vertical; }
+  label { display: flex; align-items: center; gap: 10px; font-size: 14px; min-height: 44px; }
+  input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--burgundy); }
+  .btn { min-height: 46px; padding: 0 22px; border-radius: 999px; border: 0; background: var(--burgundy); color: #fff; font: inherit; font-size: 15px; cursor: pointer; }
+  .btn--ghost { background: none; border: 1px solid var(--gold); color: var(--burgundy); min-height: 40px; padding: 0 14px; font-size: 13px; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; }
+  ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  li { background: #fff; border: 1px solid #F1D0C7; border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+  li b { font-weight: 500; }
+  li code { font-size: 12px; color: var(--muted); word-break: break-all; }
+  .empty { color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>สร้างลิงก์การ์ดเชิญแบบใส่ชื่อแขก</h1>
+  <p>พิมพ์ชื่อแขก <b>บรรทัดละ 1 ชื่อ</b> แล้วกด "สร้างลิงก์" เมื่อแขกเปิดการ์ด ฉากเปิดจะขึ้นว่า "เรียนเชิญ (ชื่อแขก)"<br>หน้านี้ไม่บันทึกข้อมูลใด ๆ ชื่อจะอยู่ในลิงก์ที่ส่งให้แขกเท่านั้น</p>
+  <textarea id="names" placeholder="คุณสมชาย ใจดี&#10;คุณแม่มาลี และครอบครัว&#10;พี่ต้น"></textarea>
+  <label><input type="checkbox" id="prefix"> เติมคำว่า "คุณ" ข้างหน้าให้อัตโนมัติ (ถ้ายังไม่มี)</label>
+  <div class="row">
+    <button class="btn" id="make" type="button">สร้างลิงก์</button>
+    <button class="btn btn--ghost" id="copy-all" type="button" hidden>คัดลอกทั้งหมด</button>
+  </div>
+  <ul id="out"><li class="empty" style="background:none;border:0;padding:0">ยังไม่มีลิงก์</li></ul>
+</main>
+<script>
+(function () {
+  'use strict';
+  var MAX_NAME_LENGTH = 60;
+  var base = new URL('./', window.location.href).href;
+  var out = document.getElementById('out');
+  var copyAll = document.getElementById('copy-all');
+  var lastLinks = [];
+
+  function clean(name) {
+    return name.replace(/[\u0000-\u001F\u007F<>]/g, '').replace(/\s+/g, ' ').trim().slice(0, MAX_NAME_LENGTH);
+  }
+
+  function linkFor(name) { return base + '?to=' + encodeURIComponent(name); }
+
+  function copy(text, btn) {
+    var done = function () { var t = btn.textContent; btn.textContent = 'คัดลอกแล้ว ✓'; setTimeout(function () { btn.textContent = t; }, 1500); };
+    if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, function () { btn.textContent = 'คัดลอกไม่ได้ กดค้างที่ลิงก์แทน'; });
+  }
+
+  function render(items) {
+    out.textContent = '';
+    items.forEach(function (item) {
+      var li = document.createElement('li');
+      var b = document.createElement('b'); b.textContent = item.name;
+      var code = document.createElement('code'); code.textContent = item.url;
+      var row = document.createElement('div'); row.className = 'row';
+      var c = document.createElement('button'); c.className = 'btn btn--ghost'; c.type = 'button'; c.textContent = 'คัดลอกลิงก์';
+      c.addEventListener('click', function () { copy(item.url, c); });
+      var line = document.createElement('a'); line.className = 'btn btn--ghost'; line.textContent = 'ส่งทาง LINE';
+      line.style.display = 'inline-flex'; line.style.alignItems = 'center'; line.style.textDecoration = 'none';
+      line.href = 'https://line.me/R/share?text=' + encodeURIComponent('เรียน ' + item.name + ' ขอเรียนเชิญร่วมงานมงคลสมรส ฝน & โต้ง วันอาทิตย์ที่ 22 พ.ย. 2569 💌 ' + item.url);
+      line.target = '_blank'; line.rel = 'noopener';
+      row.appendChild(c); row.appendChild(line);
+      li.appendChild(b); li.appendChild(code); li.appendChild(row);
+      out.appendChild(li);
+    });
+    copyAll.hidden = items.length < 2;
+  }
+
+  document.getElementById('make').addEventListener('click', function () {
+    var addPrefix = document.getElementById('prefix').checked;
+    lastLinks = document.getElementById('names').value.split('\n').map(clean).filter(Boolean).map(function (n) {
+      var name = addPrefix && n.indexOf('คุณ') !== 0 ? 'คุณ' + n : n;
+      return { name: name, url: linkFor(name) };
+    });
+    if (!lastLinks.length) { out.innerHTML = '<li class="empty" style="background:none;border:0;padding:0">กรุณาพิมพ์ชื่ออย่างน้อย 1 ชื่อ</li>'; copyAll.hidden = true; return; }
+    render(lastLinks);
+  });
+
+  copyAll.addEventListener('click', function () {
+    copy(lastLinks.map(function (i) { return i.name + '\n' + i.url; }).join('\n\n'), copyAll);
+  });
+})();
+</script>
+</body>
+</html>

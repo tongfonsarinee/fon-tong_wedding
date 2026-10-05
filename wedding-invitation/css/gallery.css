@@ -1,0 +1,60 @@
+/* ==========================================================================
+   Photo album (masonry, numbered) and lightbox
+   Behaviour: js/gallery.js · photo list: tools/import_photos.py
+   ========================================================================== */
+
+.gallery { padding: 56px 0 40px; display: flex; flex-direction: column; align-items: center; gap: 26px; }
+
+/* ---------- Masonry album ---------- */
+.album { columns: 2; column-gap: 10px; padding: 0 14px; width: 100%; }
+/* a lone photo would leave the second column empty */
+.album[data-count="1"] { columns: 1; max-width: 300px; }
+.album__item {
+  position: relative; display: block; width: 100%; margin: 0 0 10px; padding: 0;
+  border: 3px solid #fff; border-radius: 18px; overflow: hidden;
+  background: var(--blush); box-shadow: 0 0 0 1px rgba(190, 151, 94, .25), 0 18px 30px -20px rgba(125, 56, 24, .75);
+  break-inside: avoid; cursor: zoom-in;
+}
+.album__item img { width: 100%; height: auto; transition: transform .8s cubic-bezier(.2, .7, .2, 1); }
+.album__item:hover img { transform: scale(1.05); }
+.album__item:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.album__item.is-extra { display: none; }
+.album.is-expanded .album__item.is-extra { display: block; animation: riseIn .7s ease both; }
+/* photo number, matching photo-numbers.csv */
+.album__number {
+  position: absolute; left: 8px; bottom: 8px; padding: 2px 9px; border-radius: 999px;
+  background: rgba(255, 250, 245, .85); color: var(--cocoa);
+  font-family: var(--serif); font-weight: 600; font-size: 12px; letter-spacing: .08em;
+}
+
+/* ---------- Lightbox ---------- */
+.lightbox {
+  position: fixed; inset: 0; z-index: 10; display: none;
+  flex-direction: column; gap: 14px; align-items: center; justify-content: center;
+  background: rgba(46, 21, 10, .9); padding: 16px; cursor: zoom-out;
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+}
+.lightbox.is-open { display: flex; }
+.lightbox img {
+  max-height: 84vh; max-width: 100%; border-radius: 14px; object-fit: contain;
+  box-shadow: 0 0 0 1px rgba(230, 207, 158, .4), 0 30px 60px -20px rgba(0, 0, 0, .8);
+  cursor: default; touch-action: pan-y; transition: opacity .25s ease;
+}
+.lightbox img.is-switching { opacity: 0; }
+.lightbox__close {
+  position: absolute; top: 12px; right: 12px; width: 44px; height: 44px;
+  border: 0; background: none; color: #FFF4E4; font-size: 28px; cursor: pointer;
+}
+.lightbox__nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 46px; height: 46px; border-radius: 50%;
+  border: 1px solid rgba(230, 207, 158, .6); background: rgba(46, 21, 10, .55);
+  color: #FFF4E4; font-size: 22px; line-height: 1; cursor: pointer;
+}
+.lightbox__nav--prev { left: 10px; }
+.lightbox__nav--next { right: 10px; }
+.lightbox__count { font-family: var(--serif); font-size: 15px; letter-spacing: .24em; color: var(--gold-soft); }
+
+@media (prefers-reduced-motion: reduce) {
+  .lightbox img, .album__item img { transition: none; }
+}

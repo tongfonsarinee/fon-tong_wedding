@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!-- Source for the link-preview image. Render at 1200x630 and save as assets/images/og.jpg:
+     msedge --headless=new --window-size=1200,630 --screenshot=og.png design/og-template.html -->
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&family=Cormorant+Garamond:wght@600&family=Great+Vibes&family=IBM+Plex+Sans+Thai+Looped:wght@300;400&display=block" rel="stylesheet">
+<style>
+  html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    position: relative; display: flex; align-items: center; gap: 64px; padding: 0 70px 0 96px; box-sizing: border-box;
+    font-family: 'IBM Plex Sans Thai Looped', sans-serif; color: #7D3818;
+    background: radial-gradient(70% 90% at 20% 10%, #FFFFFF 0%, #FBEDE7 45%, #F1D2C8 100%);
+  }
+  body::before { content: ''; position: absolute; inset: 22px; border: 1.5px solid #C9A262; border-radius: 28px; }
+  body::after { content: ''; position: absolute; inset: 30px; border: 1px solid rgba(201, 162, 98, .45); border-radius: 22px; }
+  .arch { position: relative; flex: none; width: 330px; height: 450px; }
+  .arch::before { content: ''; position: absolute; inset: -12px; border: 1.5px solid #BE975E; border-radius: 177px 177px 26px 26px; }
+  .arch img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 24%; border-radius: 165px 165px 16px 16px; display: block; box-shadow: 0 30px 50px -26px rgba(125, 56, 24, .7); }
+  .panel { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+  .eyebrow { font-family: 'Cinzel', serif; font-weight: 500; font-size: 22px; letter-spacing: .42em; color: #9A7038; }
+  .names {
+    font-family: 'Great Vibes', cursive; font-size: 104px; line-height: 1.25; padding: 0 12px;
+    background: linear-gradient(100deg, #6E2F12 0%, #A8693A 40%, #D9AF6C 52%, #A8693A 64%, #6E2F12 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .names em { font-style: normal; font-size: 70px; color: #BE975E; -webkit-text-fill-color: #BE975E; }
+  .nick { font-size: 30px; font-weight: 400; color: #8A6450; }
+  .nick i { font-style: normal; color: #C98476; padding: 0 12px; }
+  .date { margin-top: 10px; display: flex; align-items: center; gap: 20px; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 46px; letter-spacing: .2em; }
+  .date::before, .date::after { content: ''; width: 56px; height: 1.5px; background: #BE975E; }
+  .th { font-weight: 300; font-size: 25px; color: #8A6450; }
+</style>
+</head>
+<body>
+  <div class="arch"><img src="../assets/couple/002.jpg" alt=""></div>
+  <div class="panel">
+    <div class="eyebrow">THE WEDDING OF</div>
+    <div class="names">Sarinee <em>&amp;</em> Pongsawat</div>
+    <div class="nick">ฝน <i>♡</i> โต้ง</div>
+    <div class="date">22 · 11 · 2569</div>
+    <div class="th">วันอาทิตย์ที่ 22 พฤศจิกายน พ.ศ. 2569 · ร้อยเอ็ด</div>
+  </div>
+</body>
+</html>

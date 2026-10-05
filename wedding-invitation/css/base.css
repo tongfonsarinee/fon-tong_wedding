@@ -1,0 +1,218 @@
+/* ==========================================================================
+   Base — design tokens, page frame, shared components
+   Theme: "Blush Cocoa Couture" — ivory paper, blush rose, champagne-gold foil, cocoa ink
+   (colours sampled from the printed card: ../Picture/8852C954-…jpg)
+   ========================================================================== */
+
+/* lets the holographic conic gradients rotate smoothly */
+@property --angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+
+:root {
+  --ivory: #FFFAF5;
+  --paper: #FBF3EA;
+  --cream: #F2EBD9;      /* dress code: cream */
+  --blush: #F8E3DD;
+  --petal: #F1D0C7;
+  --rose: #EAC2B8;       /* dress code: pink */
+  --rosewood: #C98476;
+  --gold: #BE975E;       /* dress code: gold */
+  --gold-soft: #E6CF9E;
+  --gold-deep: #9A7038;
+  --mocha: #916D53;      /* dress code: brown */
+  --cocoa: #7D3818;      /* ink of the printed card */
+  --ink: #4A2414;
+  --muted: #8A6450;
+  --line: rgba(190, 151, 94, .4);
+  --shadow: 0 24px 60px -30px rgba(125, 56, 24, .45);
+  --foil: linear-gradient(105deg, #B0803F 0%, #E8D19B 22%, #FFF6DE 38%, #CFA35D 56%, #EBD5A2 74%, #A8783A 100%);
+  --sans: 'IBM Plex Sans Thai Looped', 'Prompt', 'Leelawadee UI', sans-serif;
+  --serif: 'Cormorant Garamond', serif;
+  --caps: 'Cinzel', 'Cormorant Garamond', serif;
+  --script: 'Great Vibes', cursive;
+  /* fine paper grain */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .49 0 0 0 0 .22 0 0 0 0 .09 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+
+/* ---------- Reset ---------- */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #F3D5CC; }
+body {
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  color: var(--cocoa);
+}
+body.is-locked { overflow: hidden; }
+img { display: block; max-width: 100%; }
+/* components set display:flex etc.; the hidden attribute must still hide them */
+[hidden] { display: none !important; }
+a { text-decoration: none; }
+p { margin: 0; }
+
+/* ---------- Page frame: phone-width card on a blush silk backdrop ---------- */
+.stage {
+  position: relative; isolation: isolate;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  background: linear-gradient(180deg, #F3D5CC 0%, #FBEDE7 45%, #F1D2C8 100%);
+}
+.card {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  background: var(--grain), linear-gradient(180deg, var(--ivory), #FFF6F0 50%, var(--ivory));
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .8), 0 30px 120px rgba(125, 56, 24, .28);
+  overflow: hidden;
+}
+/* blurred cover photo + drifting silk glow behind the card — only visible on screens wider than the card */
+@media (min-width: 520px) {
+  .stage::after {
+    content: ''; position: fixed; inset: -80px; z-index: -2;
+    background: url(../assets/couple/002-s.jpg) 50% 30% / cover no-repeat;
+    filter: blur(50px) saturate(1.15); opacity: .42;
+  }
+  .stage::before {
+    content: ''; position: fixed; inset: -10%; z-index: -1;
+    background:
+      radial-gradient(36% 40% at 14% 22%, rgba(255, 246, 230, .95), transparent 70%),
+      radial-gradient(34% 40% at 86% 18%, rgba(230, 207, 158, .7), transparent 70%),
+      radial-gradient(40% 44% at 82% 84%, rgba(234, 194, 184, .95), transparent 70%),
+      radial-gradient(36% 40% at 16% 82%, rgba(201, 132, 118, .45), transparent 70%);
+    filter: blur(40px);
+    animation: auroraDrift 22s ease-in-out infinite alternate;
+  }
+}
+
+/* ---------- Surfaces ---------- */
+/* frosted white panel */
+.glass {
+  position: relative;
+  background: rgba(255, 255, 255, .66);
+  border: 1px solid rgba(255, 255, 255, .95);
+  border-radius: 24px;
+  box-shadow: var(--shadow), inset 0 1px 0 #fff;
+}
+/* rotating champagne/rose edge; the element needs position + border-radius */
+.holo::after {
+  content: ''; position: absolute; inset: -1.5px; border-radius: inherit; padding: 1.5px; pointer-events: none;
+  background: conic-gradient(from var(--angle), #E8D19B, #FFF6DE, #EAC2B8, #C98476, #BE975E, #FFF6DE, #E8D19B);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  animation: spin 8s linear infinite;
+}
+/* deep cocoa panel with gold dust — the "chocolate & gold" sections */
+.luxe {
+  position: relative; isolation: isolate; color: #F7E9DA;
+  background:
+    radial-gradient(120% 60% at 50% 0%, rgba(201, 132, 118, .35), transparent 60%),
+    radial-gradient(80% 50% at 50% 110%, rgba(190, 151, 94, .28), transparent 70%),
+    linear-gradient(170deg, #5A2A14 0%, #44200F 55%, #2F150A 100%);
+}
+.luxe::before {
+  content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none; opacity: .9;
+  background:
+    radial-gradient(1.5px 1.5px at 12% 18%, #FFE9B8, transparent 60%),
+    radial-gradient(1.2px 1.2px at 28% 64%, #FFF4DA, transparent 60%),
+    radial-gradient(2px 2px at 78% 12%, #F6DCA0, transparent 60%),
+    radial-gradient(1.5px 1.5px at 88% 58%, #FFE9B8, transparent 60%),
+    radial-gradient(1.2px 1.2px at 52% 86%, #FFF4DA, transparent 60%),
+    radial-gradient(1.8px 1.8px at 64% 34%, rgba(255, 233, 184, .8), transparent 60%),
+    radial-gradient(1.2px 1.2px at 6% 92%, #F6DCA0, transparent 60%),
+    radial-gradient(1.5px 1.5px at 94% 90%, #FFF4DA, transparent 60%);
+  animation: twinkleField 5s ease-in-out infinite alternate;
+}
+.luxe .eyebrow { color: var(--gold-soft); }
+.luxe .title { color: #FFF4E4; }
+.luxe .laurel { color: var(--gold-soft); }
+
+/* ---------- Text ---------- */
+.section-head { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.eyebrow {
+  font-family: var(--caps); font-weight: 500;
+  font-size: 12.5px;
+  letter-spacing: .38em; padding-left: .38em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+}
+.title { font-size: 25px; font-weight: 400; line-height: 1.4; color: var(--cocoa); }
+
+/* cocoa → rose-gold foil text with a slow travelling sheen */
+.foil-text {
+  background: linear-gradient(100deg, #6E2F12 0%, #9E5E33 28%, #D3A766 44%, #F4DDAA 50%, #D3A766 56%, #9E5E33 72%, #6E2F12 100%) 0 0 / 260% 100%;
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+  animation: gleam 7s ease-in-out infinite;
+}
+/* champagne-gold variant for the cocoa sections */
+.foil-text--light {
+  background-image: linear-gradient(100deg, #C79C55 0%, #EED7A2 30%, #FFF8E6 48%, #FFFDF5 50%, #FFF8E6 52%, #EED7A2 70%, #C79C55 100%);
+}
+
+/* S P monogram, set in the script face like the printed card */
+.monogram { display: block; width: 132px; height: auto; overflow: visible; }
+.monogram text { font-family: var(--script); font-size: 104px; fill: url(#g-ink); }
+.monogram--sm { width: 96px; }
+
+/* Laurel with a heart (SVG symbol #laurel) — draws itself when it scrolls into view */
+.laurel {
+  display: block; width: 190px; height: 38px; margin: 0 auto;
+  color: var(--gold); fill: none; stroke: currentColor; stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round;
+}
+.laurel--sm { width: 150px; height: 30px; }
+.draw { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 2.4s cubic-bezier(.45, 0, .2, 1) .2s; }
+.draw.is-visible, .is-visible .draw { stroke-dashoffset: 0; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  position: relative; overflow: hidden; isolation: isolate;
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 48px; padding: 0 26px; border-radius: 999px;
+  font-family: inherit; font-size: 14.5px; font-weight: 500; letter-spacing: .04em;
+  cursor: pointer; transition: background .25s, color .25s, transform .2s, box-shadow .25s;
+}
+.btn:active { transform: scale(.97); }
+.btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+/* champagne foil with a sweeping sheen */
+.btn--foil {
+  border: 0; color: var(--ink); background: var(--foil);
+  box-shadow: 0 14px 28px -14px rgba(154, 112, 56, .9), inset 0 1px 0 rgba(255, 255, 255, .9), inset 0 -2px 0 rgba(140, 95, 30, .25);
+}
+.btn--foil::after {
+  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, .8) 50%, transparent 62%);
+  transform: translateX(-120%); animation: sheen 4.2s ease-in-out infinite;
+}
+.btn--ghost { border: 1px solid var(--line); color: var(--cocoa); background: rgba(255, 255, 255, .7); }
+.btn--ghost:hover { background: #fff; }
+.btn--outline { border: 1px solid rgba(230, 207, 158, .7); color: #FFF4E4; background: rgba(255, 255, 255, .06); }
+.btn--outline:hover { background: rgba(255, 255, 255, .14); }
+
+.pill {
+  padding: 10px 22px;
+  border: 1px solid rgba(230, 207, 158, .6); border-radius: 999px; background: rgba(255, 255, 255, .08);
+  font-size: 15px; color: #FFF4E4; letter-spacing: .04em;
+}
+
+/* ---------- Fade-up + un-blur on scroll (js/scroll.js adds .is-visible) ---------- */
+.reveal {
+  opacity: 0; transform: translateY(22px); filter: blur(6px);
+  transition: opacity 1s cubic-bezier(.2, .7, .2, 1), transform 1s cubic-bezier(.2, .7, .2, 1), filter 1s ease;
+}
+.reveal.is-visible { opacity: 1; transform: none; filter: none; }
+
+/* ---------- Shared keyframes ---------- */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes dropIn { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: none; } }
+@keyframes riseIn { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes popIn { from { transform: scale(.6); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes spin { to { --angle: 360deg; } }
+@keyframes gleam { 0%, 100% { background-position: 0% 0; } 50% { background-position: 100% 0; } }
+@keyframes sheen { 0%, 55% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
+@keyframes twinkleField { from { opacity: .45; } to { opacity: 1; } }
+@keyframes auroraDrift { from { transform: translate3d(-3%, -2%, 0) rotate(-4deg); } to { transform: translate3d(3%, 2%, 0) rotate(4deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; filter: none; transition: none; }
+  .draw { stroke-dashoffset: 0; transition: none; }
+  .foil-text, .holo::after, .luxe::before, .stage::before, .btn--foil::after { animation: none; }
+}
