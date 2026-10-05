@@ -1,8 +1,7 @@
 // Opening screen. Tap the wax seal (or the button):
 //   seal cracks (music + sound + haptics start) → flap opens → letter rises
 //   → gold dust gathers into the S·P monogram and bursts into petals (js/particles.js)
-//   → 6-second cinematic photo trailer → fly into the card.
-// Returning guests get the short version (envelope → card). "ข้าม" skips at any point.
+//   → 6-second cinematic photo trailer → fly into the card. Plays in full on every visit; "ข้าม" skips it.
 (function () {
   'use strict';
 
@@ -15,14 +14,13 @@
   var PETAL_LIGHT_RATIO = 0.4;
   var GOLD_DUST_COUNT = 14;
   var CARD_THEME_COLOR = '#F3D5CC';
-  var SEEN_KEY = 'ecard-seen';
 
   // ms after the tap — each step matches a transition in css/intro.css
   var STEP_FLAP_OPEN = 380;
   var STEP_FLAP_BEHIND = 780;  // flap has passed vertical: tuck it behind the letter
   var STEP_LETTER_OUT = 820;
   var STEP_MAGIC = 1650;       // first visit: gold dust rises out of the letter
-  var STEP_SHORT_FLY = 1950;   // returning visit: straight into the card
+  var STEP_SHORT_FLY = 1950;   // no particle support: straight into the card
   var SHOT_MS = 1150;          // each cinematic shot
   var TITLE_MS = 1700;         // closing title card
   var REMOVE_AFTER_FLY_MS = 900; // .intro opacity/transform transition
@@ -113,13 +111,6 @@
     startPetals();
   }
 
-  function hasSeen() {
-    try { return localStorage.getItem(SEEN_KEY) === '1'; } catch (e) { return false; }
-  }
-  function markSeen() {
-    try { localStorage.setItem(SEEN_KEY, '1'); } catch (e) { /* private mode */ }
-  }
-
   function initIntro() {
     var intro = document.getElementById('intro');
     var openBtn = document.getElementById('intro-open');
@@ -140,7 +131,7 @@
       spawn(sky, GLINT_COUNT, makeGlint);
     }
 
-    var shortVersion = hasSeen() || reduceMotion || !window.EcardParticles || !dust || !cinema;
+    var shortVersion = reduceMotion || !window.EcardParticles || !dust || !cinema;
     var shots = cinema ? Array.prototype.slice.call(cinema.querySelectorAll('.cinema__shot')) : [];
 
     // load the trailer photos while the guest looks at the envelope
@@ -171,7 +162,6 @@
       flown = true;
       timers.forEach(clearTimeout);
       if (particles) particles.stop();
-      markSeen();
       intro.classList.add('is-opening');
       var themeMeta = document.querySelector('meta[name="theme-color"]');
       if (themeMeta) themeMeta.setAttribute('content', CARD_THEME_COLOR);
