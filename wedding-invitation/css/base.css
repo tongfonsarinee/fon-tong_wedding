@@ -45,6 +45,9 @@ body.is-locked { overflow: hidden; }
 img { display: block; max-width: 100%; }
 /* components set display:flex etc.; the hidden attribute must still hide them */
 [hidden] { display: none !important; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* [data-pause] sections freeze their looping animations while off screen (js/scroll.js) */
+.is-offscreen, .is-offscreen * { animation-play-state: paused !important; }
 a { text-decoration: none; }
 p { margin: 0; }
 
@@ -143,6 +146,9 @@ p { margin: 0; }
   color: transparent; -webkit-text-fill-color: transparent;
   animation: gleam 7s ease-in-out infinite;
 }
+/* tilting the phone / moving the mouse (js/motion.js adds .has-motion): the foil catches the light instead */
+.has-motion .foil-text { animation: none; background-position: calc(50% + var(--tx, 0) * 48%) 0; }
+
 /* champagne-gold variant for the cocoa sections */
 .foil-text--light {
   background-image: linear-gradient(100deg, #C79C55 0%, #EED7A2 30%, #FFF8E6 48%, #FFFDF5 50%, #FFF8E6 52%, #EED7A2 70%, #C79C55 100%);

@@ -1,9 +1,77 @@
 /* ==========================================================================
-   Photo album (masonry, numbered) and lightbox
-   Behaviour: js/gallery.js · photo list: tools/import_photos.py
+   Photo album: 3D flip-book, masonry grid (numbered) and lightbox
+   Behaviour: js/book.js, js/gallery.js · photo list: tools/import_photos.py
    ========================================================================== */
 
-.gallery { padding: 56px 0 40px; display: flex; flex-direction: column; align-items: center; gap: 26px; }
+.gallery { padding: 34px 0 24px; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+
+/* ---------- Flip-book (js/book.js builds the pages from the album) ---------- */
+.book { width: 100%; padding: 0 12px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.book__stage { width: min(392px, 100%); aspect-ratio: 2 / 1.42; cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; }
+.book__stage:focus-visible { outline: 2px solid var(--gold); outline-offset: 6px; border-radius: 10px; }
+/* closed: shift so the cover sits centred; open: the spread is centred */
+.book__inner {
+  position: relative; width: 100%; height: 100%; perspective: 1800px;
+  transition: transform .9s cubic-bezier(.645, .045, .355, 1);
+}
+.book__inner.is-closed { transform: translateX(-25%); }
+.book__inner.is-finished { transform: translateX(25%); }
+.book__page {
+  position: absolute; left: 50%; top: 0; width: 50%; height: 100%;
+  transform-origin: 0 50%; transform-style: preserve-3d;
+  transition: transform .9s cubic-bezier(.645, .045, .355, 1);
+}
+.book__page.is-turned { transform: rotateY(-180deg); }
+.book__face {
+  position: absolute; inset: 0; overflow: hidden;
+  -webkit-backface-visibility: hidden; backface-visibility: hidden;
+  background: var(--grain), #FFFBF6;
+}
+/* spine shading on the inner edge of each page */
+.book__face--front { border-radius: 2px 10px 10px 2px; box-shadow: inset 14px 0 18px -14px rgba(125, 56, 24, .4), inset 0 0 0 1px rgba(190, 151, 94, .25), 0 14px 26px -16px rgba(74, 36, 20, .6); }
+.book__face--back { transform: rotateY(180deg); border-radius: 10px 2px 2px 10px; box-shadow: inset -14px 0 18px -14px rgba(125, 56, 24, .4), inset 0 0 0 1px rgba(190, 151, 94, .25), 0 14px 26px -16px rgba(74, 36, 20, .6); }
+/* a shadow sweeps across the page while it turns */
+.book__face::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0;
+  background: linear-gradient(90deg, rgba(74, 36, 20, .28), rgba(74, 36, 20, 0) 65%);
+  transition: opacity .45s ease;
+}
+.book__face--back::after { background: linear-gradient(270deg, rgba(74, 36, 20, .28), rgba(74, 36, 20, 0) 65%); }
+.book__page.is-moving .book__face::after { opacity: 1; }
+
+/* mounted photo */
+.book__photo { margin: 0; height: 100%; padding: 9% 9% 0; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.book__photo img {
+  width: 100%; aspect-ratio: 3 / 4; object-fit: cover; object-position: 50% 25%;
+  border: 3px solid #fff; border-radius: 3px; box-shadow: 0 6px 14px -8px rgba(74, 36, 20, .6);
+}
+.book__photo figcaption { font-family: var(--serif); font-size: 11px; font-weight: 600; letter-spacing: .14em; color: var(--muted); }
+
+/* leather cover with gold tooling */
+.book__cover, .book__back {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center;
+  background: radial-gradient(90% 70% at 30% 20%, #7A3A1E 0%, #4A2414 60%, #331809 100%);
+  color: #F3DDAA;
+}
+.book__cover::before, .book__back::before { content: ''; position: absolute; inset: 9px; border: 1px solid rgba(230, 207, 158, .6); border-radius: 6px; }
+.book__cover-eyebrow { font-family: var(--caps); font-size: 9px; letter-spacing: .34em; padding-left: .34em; text-transform: uppercase; color: var(--gold-soft); }
+.book__cover-mono { font-family: var(--script); font-size: 58px; line-height: 1; padding: 0 .1em; }
+.book__cover-mono i { font-style: normal; margin-left: -.12em; position: relative; top: .14em; }
+.book__cover-names { font-family: var(--caps); font-size: 8.5px; letter-spacing: .2em; padding-left: .2em; text-transform: uppercase; }
+.book__cover-date { font-family: var(--serif); font-size: 13px; font-weight: 600; letter-spacing: .16em; color: #FFF4E4; }
+.book__cover-hint { margin-top: 8px; font-size: 10.5px; color: rgba(242, 220, 199, .75); animation: pulseText 2.2s ease-in-out infinite; }
+.book__note { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; color: var(--cocoa); font-family: var(--serif); font-style: italic; font-size: 14px; }
+.book__note-script { font-family: var(--script); font-style: normal; font-size: 40px; color: var(--gold-deep); }
+.book__note-heart { font-style: normal; font-size: 22px; color: var(--rosewood); }
+
+.book__nav { display: flex; align-items: center; gap: 16px; }
+.book__nav button {
+  width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: rgba(255, 255, 255, .8);
+  color: var(--cocoa); font-size: 20px; line-height: 1; cursor: pointer;
+}
+.book__nav button:disabled { opacity: .35; cursor: default; }
+.book__count { min-width: 64px; text-align: center; font-family: var(--serif); font-size: 15px; font-weight: 600; letter-spacing: .12em; color: var(--muted); }
+.album__label { margin-top: 8px; font-size: 13px; letter-spacing: .04em; color: var(--muted); }
 
 /* ---------- Masonry album ---------- */
 .album { columns: 2; column-gap: 10px; padding: 0 14px; width: 100%; }
@@ -55,6 +123,10 @@
 .lightbox__nav--next { right: 10px; }
 .lightbox__count { font-family: var(--serif); font-size: 15px; letter-spacing: .24em; color: var(--gold-soft); }
 
+@keyframes pulseText { 0%, 100% { opacity: .5; } 50% { opacity: 1; } }
+
 @media (prefers-reduced-motion: reduce) {
   .lightbox img, .album__item img { transition: none; }
+  .book__inner, .book__page { transition: none; }
+  .book__cover-hint { animation: none; }
 }

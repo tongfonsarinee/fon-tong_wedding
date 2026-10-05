@@ -19,23 +19,37 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&family=IBM+Plex+Sans+Thai+Looped:wght@200;300;400;500;600&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="assets/couple/002.jpg">
-<link rel="stylesheet" href="css/base.css?v=202610051304">
-<link rel="stylesheet" href="css/intro.css?v=202610051304">
-<link rel="stylesheet" href="css/hero.css?v=202610051304">
-<link rel="stylesheet" href="css/sections.css?v=202610051304">
-<link rel="stylesheet" href="css/gallery.css?v=202610051304">
-<link rel="stylesheet" href="css/effects.css?v=202610051304">
+<link rel="stylesheet" href="css/base.css?v=202610051414">
+<link rel="stylesheet" href="css/intro.css?v=202610051414">
+<link rel="stylesheet" href="css/hero.css?v=202610051414">
+<link rel="stylesheet" href="css/sections.css?v=202610051414">
+<link rel="stylesheet" href="css/gallery.css?v=202610051414">
+<link rel="stylesheet" href="css/effects.css?v=202610051414">
+<link rel="stylesheet" href="css/features.css?v=202610051414">
 </head>
 <body>
 <!-- Shared SVG: gradients + ornaments (laurel with heart, corner flourish) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
-    <linearGradient id="g-ink" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="g-ink" x1="0" y1="0" x2="1" y2="1" spreadMethod="reflect" data-light>
       <stop offset="0" stop-color="#6E2F12"/><stop offset=".42" stop-color="#A8693A"/><stop offset=".52" stop-color="#D9AF6C"/><stop offset=".62" stop-color="#A8693A"/><stop offset="1" stop-color="#6E2F12"/>
     </linearGradient>
     <linearGradient id="g-gold" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#C79C55"/><stop offset=".4" stop-color="#F6E3B0"/><stop offset=".55" stop-color="#FFF8E6"/><stop offset=".7" stop-color="#D8B06A"/><stop offset="1" stop-color="#B0803F"/>
     </linearGradient>
+    <linearGradient id="g-frame" x1="0" y1="0" x2="1" y2="1" spreadMethod="reflect" data-light>
+      <stop offset="0" stop-color="#8A5A24"/><stop offset=".16" stop-color="#D9B26A"/><stop offset=".3" stop-color="#FFF3CC"/><stop offset=".4" stop-color="#E2BC72"/>
+      <stop offset=".56" stop-color="#9C6B2C"/><stop offset=".7" stop-color="#E8C984"/><stop offset=".84" stop-color="#FFF6DA"/><stop offset="1" stop-color="#A87838"/>
+    </linearGradient>
+    <linearGradient id="g-shine" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0"/><stop offset=".44" stop-color="#FFFFFF" stop-opacity="0"/>
+      <stop offset=".5" stop-color="#FFFFFF" stop-opacity=".95"/><stop offset=".56" stop-color="#FFFFFF" stop-opacity="0"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+      <animateTransform attributeName="gradientTransform" type="translate" values="-1.2 -1.2; 1.2 1.2; 1.2 1.2" keyTimes="0; .4; 1" dur="6s" repeatCount="indefinite"/>
+    </linearGradient>
+    <clipPath id="arch-clip" clipPathUnits="objectBoundingBox"><path d="M0 0.5 A0.5 0.5 0 1 1 1 0.5 A0.5 0.5 0 1 1 0 0.5 Z"/></clipPath>
+    <radialGradient id="g-pen">
+      <stop offset="0" stop-color="#FFFFFF"/><stop offset=".25" stop-color="#FFF1C9"/><stop offset=".55" stop-color="#F0CE82" stop-opacity=".55"/><stop offset="1" stop-color="#F0CE82" stop-opacity="0"/>
+    </radialGradient>
     <radialGradient id="g-wax" cx="36%" cy="30%" r="78%">
       <stop offset="0" stop-color="#D08A78"/><stop offset=".5" stop-color="#A0503D"/><stop offset="1" stop-color="#6A2818"/>
     </radialGradient>
@@ -68,6 +82,15 @@
 
 <!-- ===================== Opening screen: envelope with a wax seal ===================== -->
 <div class="intro" id="intro">
+  <!-- faint couple photos drifting behind the envelope (css/intro.css .intro__photos) -->
+  <div class="intro__photos" aria-hidden="true">
+    <img src="assets/couple/002-s.jpg" alt="" decoding="async">
+    <img src="assets/couple/003-s.jpg" alt="" decoding="async">
+    <img src="assets/couple/013-s.jpg" alt="" decoding="async">
+    <img src="assets/couple/009-s.jpg" alt="" decoding="async">
+    <img src="assets/couple/011-s.jpg" alt="" decoding="async">
+    <img src="assets/couple/004-s.jpg" alt="" decoding="async">
+  </div>
   <div class="intro__sky" aria-hidden="true"></div>
   <div class="intro__frame" aria-hidden="true"></div>
   <div class="intro__content">
@@ -99,6 +122,17 @@
     <div class="intro__date">22 · 11 · 2569</div>
     <button class="intro__open" id="intro-open" type="button">เปิดการ์ดเชิญ<small>Open Invitation</small></button>
   </div>
+  <canvas class="intro__dust" id="intro-dust" aria-hidden="true"></canvas>
+  <!-- cinematic trailer (first visit): photos load after the page, see js/intro.js -->
+  <div class="cinema" id="cinema" aria-hidden="true">
+    <div class="cinema__shot cinema__shot--pan-r"><img data-src="assets/couple/003.jpg" alt=""><span class="cinema__cap cinema__cap--script">Two hearts</span></div>
+    <div class="cinema__shot cinema__shot--zoom-in"><img data-src="assets/couple/013.jpg" alt=""><span class="cinema__cap cinema__cap--script">Sarinee</span></div>
+    <div class="cinema__shot cinema__shot--zoom-out"><img data-src="assets/couple/012.jpg" alt=""><span class="cinema__cap cinema__cap--script">Pongsawat</span></div>
+    <div class="cinema__shot cinema__shot--pan-l"><img data-src="assets/couple/009.jpg" alt=""><span class="cinema__cap">One love · 22 · 11 · 2026</span></div>
+    <div class="cinema__title"><small>Save the Date</small><b>Sarinee &amp; Pongsawat</b><span>ฝน ♡ โต้ง</span></div>
+    <i class="cinema__bar cinema__bar--top"></i><i class="cinema__bar cinema__bar--bottom"></i>
+  </div>
+  <button class="intro__skip" id="intro-skip" type="button">ข้าม<span aria-hidden="true"> ›</span></button>
 </div>
 <div class="petals" id="petals" aria-hidden="true"></div>
 
@@ -106,13 +140,23 @@
 <main class="card">
 
   <!-- ===================== Cover: arch portrait ===================== -->
-  <header class="cover" id="cover">
+  <header class="cover" id="cover" data-pause>
     <div class="cover__glow" aria-hidden="true"></div>
+    <div class="cover__sparkles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
     <div class="cover__eyebrow">We're getting married</div>
     <div class="arch">
       <div class="arch__frame">
         <img class="arch__photo" src="assets/couple/002.jpg" width="1044" height="1566" alt="ฝนและโต้ง คู่บ่าวสาว" fetchpriority="high" decoding="async">
       </div>
+      <!-- frame: layered modern oval — gold line offset up-right, light orbiting it, sparkles (css/hero.css .frame-*) -->
+      <svg class="arch__ornament" viewBox="0 0 400 590" aria-hidden="true">
+        <ellipse class="frame-offset frame-draw" pathLength="1" cx="212" cy="291.33" rx="160" ry="213.33"/>
+        <ellipse class="frame-orbit" pathLength="1" cx="212" cy="291.33" rx="160" ry="213.33"/>
+        <g class="frame-sparkles">
+          <path class="frame-sparkle" d="M314.85 115.91 Q316.77 125.99 326.85 127.91 Q316.77 129.83 314.85 139.91 Q312.93 129.83 302.85 127.91 Q312.93 125.99 314.85 115.91 Z"/><path class="frame-sparkle" d="M331.85 103.41 Q332.57 107.19 336.35 107.91 Q332.57 108.63 331.85 112.41 Q331.13 108.63 327.35 107.91 Q331.13 107.19 331.85 103.41 Z"/><circle class="frame-dot" cx="300.85" cy="103.91" r="1.8"/>
+          <path class="frame-sparkle" d="M109.15 447.76 Q110.27 453.64 116.15 454.76 Q110.27 455.88 109.15 461.76 Q108.03 455.88 102.15 454.76 Q108.03 453.64 109.15 447.76 Z"/><circle class="frame-dot" cx="93.15" cy="474.76" r="2.2"/>
+        </g>
+      </svg>
       <svg class="arch__seal" viewBox="0 0 100 100" aria-hidden="true">
         <defs><path id="seal-arc" d="M50 50 m-37 0 a37 37 0 1 1 74 0 a37 37 0 1 1 -74 0"/></defs>
         <circle cx="50" cy="50" r="48"/>
@@ -120,10 +164,12 @@
         <text class="arch__seal-mono" x="50" y="57" text-anchor="middle">S&amp;P</text>
       </svg>
     </div>
+    <!-- names: glyph outlines of Great Vibes, written in gold ink by js/handwriting.js -->
     <h1 class="cover__names">
-      <span class="cover__a foil-text">Sarinee</span>
-      <span class="cover__amp">&amp;</span>
-      <span class="cover__b foil-text">Pongsawat</span>
+      <span class="visually-hidden">Sarinee &amp; Pongsawat</span>
+      <svg class="ink cover__a" viewBox="26 0 2633 1177" width="2633" height="1177" aria-hidden="true"><path d="M413 930Q315 930 234 901Q152 872 102 816Q52 759 47 676Q45 642 58 601Q71 560 94 520Q118 479 150 446Q183 414 220 397Q223 395 230 394Q236 393 239 393Q245 393 245 396Q245 401 230 412Q188 445 161 488Q133 531 119 580Q105 629 105 679Q105 738 130 780Q156 823 199 850Q242 878 297 891Q352 904 412 904Q479 904 544 889Q610 874 664 846Q747 802 796 737Q844 672 844 608Q844 574 830 543Q815 512 783 487Q759 468 724 451Q690 434 652 418Q613 402 576 386Q539 369 511 350Q471 323 452 292Q434 261 434 230Q434 193 456 158Q477 123 514 94Q552 66 599 50Q640 36 688 28Q737 20 784 20Q823 20 858 26Q894 31 921 45Q955 61 973 88Q991 114 991 143Q991 183 955 213Q942 223 926 232Q910 240 888 246Q884 247 879 247Q867 247 867 240Q867 236 874 232Q880 227 893 226Q923 222 938 203Q954 184 954 159Q954 133 936 108Q919 82 883 64Q847 47 791 47Q759 47 720 54Q682 61 637 77Q582 96 546 133Q509 170 509 212Q509 238 526 264Q544 291 583 315Q616 335 658 354Q700 374 743 394Q786 413 821 435Q876 469 900 508Q924 547 924 588Q924 636 896 684Q867 733 821 776Q775 818 720 851Q656 889 576 910Q495 930 413 930Z"/><path d="M1202 841Q1179 841 1162 828Q1144 815 1144 775Q1144 758 1146 743Q1149 728 1153 711Q1144 726 1128 748Q1112 770 1092 791Q1073 812 1052 826Q1032 840 1014 840Q988 840 972 816Q956 793 956 755Q956 714 975 667Q994 620 1027 577Q1060 534 1103 507Q1146 480 1193 480Q1216 480 1237 488Q1258 495 1274 512Q1281 519 1281 528Q1281 534 1276 538Q1271 542 1263 540Q1252 505 1216 505Q1199 505 1177 516Q1150 530 1120 560Q1089 591 1062 630Q1036 668 1019 707Q1002 746 1002 778Q1002 811 1027 811Q1049 811 1072 790Q1096 769 1118 738Q1139 706 1157 675Q1175 644 1185 625Q1200 598 1213 580Q1226 562 1250 562Q1261 562 1272 565Q1283 568 1295 566Q1265 596 1242 637Q1220 678 1208 718Q1196 757 1196 784Q1196 814 1216 814Q1232 814 1250 796Q1269 778 1286 750Q1304 723 1319 694Q1334 666 1343 645Q1348 645 1352 646Q1355 647 1355 654Q1354 658 1352 662Q1349 667 1344 678Q1336 694 1322 721Q1308 748 1289 776Q1270 803 1248 822Q1226 841 1202 841Z"/><path d="M1344 642Q1352 625 1365 588Q1378 550 1392 504Q1406 458 1413 417Q1416 401 1424 394Q1432 386 1441 386Q1454 386 1465 398Q1476 411 1476 434Q1476 462 1460 482Q1443 502 1419 520Q1429 521 1440 522Q1451 522 1464 522Q1511 522 1557 516Q1559 522 1559 525Q1559 538 1552 558Q1544 578 1536 594Q1532 603 1520 626Q1508 650 1494 680Q1480 709 1470 738Q1461 766 1461 786Q1461 812 1481 812Q1500 812 1534 768Q1568 723 1602 645Q1614 645 1614 654Q1603 681 1586 713Q1570 745 1550 774Q1530 802 1507 820Q1484 839 1459 839Q1440 839 1421 824Q1402 808 1402 773Q1402 742 1414 712Q1426 683 1441 657Q1456 631 1468 611Q1480 591 1480 579Q1480 561 1458 553Q1435 545 1399 544Q1381 590 1372 612Q1363 634 1355 654Q1339 654 1344 642Z"/><path d="M1630 838Q1593 838 1578 816Q1563 795 1563 767Q1563 752 1566 736Q1570 721 1575 708L1642 537Q1645 529 1645 523Q1645 513 1640 506Q1635 498 1633 495L1688 493Q1703 492 1710 496Q1716 501 1716 507Q1716 513 1709 529Q1699 553 1682 589Q1665 625 1648 663Q1632 701 1620 734Q1609 767 1609 785Q1609 798 1616 807Q1622 816 1638 816Q1659 816 1680 800Q1700 783 1718 757Q1736 731 1752 701Q1767 671 1778 645Q1790 645 1790 654Q1780 679 1764 711Q1748 743 1728 772Q1707 800 1682 819Q1658 838 1630 838ZM1719 431Q1706 431 1696 421Q1687 411 1687 397Q1687 380 1701 366Q1715 353 1732 353Q1746 353 1756 362Q1766 371 1766 385Q1766 403 1752 417Q1738 431 1719 431Z"/><path d="M1682 846Q1718 773 1751 702Q1784 630 1819 565Q1839 529 1853 514Q1867 500 1890 500Q1898 500 1907 502Q1916 505 1925 505Q1931 505 1934 504Q1920 512 1898 544Q1875 575 1852 616Q1829 657 1811 693Q1830 670 1851 647Q1872 624 1897 603Q1921 582 1954 560Q1988 537 2020 522Q2052 507 2071 507Q2078 507 2081 508Q2081 508 2070 528Q2059 547 2042 578Q2026 610 2009 646Q1992 681 1978 714Q1965 746 1961 768Q1958 781 1958 792Q1958 808 1964 813Q1970 818 1977 818Q1996 818 2016 801Q2036 784 2054 758Q2073 731 2089 701Q2105 671 2116 645Q2128 645 2128 654Q2117 681 2100 714Q2084 746 2064 775Q2043 804 2018 823Q1993 842 1964 842Q1944 842 1922 828Q1901 814 1901 776Q1901 765 1903 752Q1905 740 1910 725Q1918 705 1929 682Q1940 659 1965 619Q1972 608 1974 602Q1975 596 1975 592Q1975 580 1964 580Q1955 580 1938 590Q1920 600 1894 625Q1869 649 1834 693Q1800 737 1755 823Q1748 836 1740 837Q1731 838 1716 839Q1706 840 1697 840Q1688 841 1682 846Z"/><path d="M2188 842Q2151 842 2122 818Q2092 794 2092 745Q2092 704 2110 658Q2129 612 2160 572Q2190 531 2228 506Q2265 480 2303 480Q2322 480 2340 491Q2358 502 2358 529Q2358 554 2339 584Q2320 614 2285 640Q2270 651 2247 661Q2224 671 2201 678Q2178 684 2163 684Q2158 696 2154 716Q2149 736 2149 757Q2149 782 2159 802Q2169 822 2196 822Q2229 822 2258 803Q2286 784 2308 755Q2331 726 2347 696Q2363 666 2372 645Q2384 645 2384 654Q2371 682 2354 715Q2338 748 2316 776Q2293 805 2262 824Q2230 842 2188 842ZM2170 666Q2184 666 2217 656Q2250 645 2277 622Q2303 599 2317 572Q2331 544 2331 525Q2331 503 2315 503Q2303 503 2282 519Q2261 535 2230 573Q2211 597 2194 625Q2177 653 2170 666Z"/><path d="M2444 842Q2407 842 2378 818Q2348 794 2348 745Q2348 704 2366 658Q2385 612 2416 572Q2446 531 2484 506Q2521 480 2559 480Q2578 480 2596 491Q2614 502 2614 529Q2614 554 2595 584Q2576 614 2541 640Q2526 651 2503 661Q2480 671 2457 678Q2434 684 2419 684Q2414 696 2410 716Q2405 736 2405 757Q2405 782 2415 802Q2425 822 2452 822Q2485 822 2514 803Q2542 784 2564 755Q2587 726 2603 696Q2619 666 2628 645Q2640 645 2640 654Q2627 682 2610 715Q2594 748 2572 776Q2549 805 2518 824Q2486 842 2444 842ZM2426 666Q2440 666 2473 656Q2506 645 2533 622Q2559 599 2573 572Q2587 544 2587 525Q2587 503 2571 503Q2559 503 2538 519Q2517 535 2486 573Q2467 597 2450 625Q2433 653 2426 666Z"/><circle class="ink__pen" r="70" cx="0" cy="0"/></svg>
+      <svg class="ink cover__amp" viewBox="-9 0 778 1177" width="778" height="1177" aria-hidden="true"><path d="M263 883Q178 883 122 856Q66 830 38 786Q11 743 11 694Q11 639 44 584Q77 530 142 490Q208 451 303 441Q289 422 282 398Q275 373 275 351Q276 298 305 258Q334 217 380 189Q425 161 477 146Q529 132 575 132Q603 132 632 140Q661 147 681 166Q701 185 701 220Q701 249 683 272Q665 295 639 295Q620 295 606 281Q592 267 592 249Q592 228 606 214Q619 201 639 201Q648 201 660 207Q671 213 674 219Q675 215 675 208Q675 181 653 170Q631 159 606 159Q566 159 513 178Q460 198 410 242Q392 258 373 284Q354 310 341 340Q328 369 328 399Q328 422 336 439Q351 439 370 438Q390 436 411 436Q437 436 452 447Q467 458 467 472Q467 482 455 491Q443 500 417 500Q384 500 358 486Q331 471 316 456Q250 465 204 505Q158 545 134 600Q110 654 110 708Q110 751 126 788Q143 825 177 848Q211 870 263 870Q317 870 362 850Q406 831 438 800Q470 769 488 734Q505 700 505 670Q505 644 486 626Q468 609 438 600Q408 592 374 592Q339 592 304 602Q270 611 246 630Q222 650 217 680Q217 682 216 684Q216 687 216 689Q216 711 232 732Q249 754 284 772Q293 776 293 787Q293 798 283 793Q228 764 202 730Q177 695 177 664Q177 619 226 586Q274 554 364 554H541Q557 554 588 547Q620 540 653 526Q686 513 710 494Q733 476 733 452Q733 439 724 424Q722 421 722 417Q722 411 727 411Q731 411 734 416Q749 438 749 461Q749 488 730 511Q710 534 677 552Q644 569 604 578Q563 587 521 586Q540 602 549 622Q558 642 558 664Q558 701 536 740Q514 778 474 810Q434 843 380 863Q327 883 263 883ZM417 483Q450 483 450 470Q450 465 442 460Q433 454 419 453Q413 452 399 452Q385 452 370 452Q354 452 344 452Q369 483 417 483Z"/><circle class="ink__pen" r="70" cx="0" cy="0"/></svg>
+      <svg class="ink cover__b" viewBox="-16 0 3719 1177" width="3719" height="1177" aria-hidden="true"><path d="M169 877Q147 877 126 874Q63 866 34 837Q4 808 4 774Q4 737 38 707Q71 677 132 677Q151 677 172 680Q194 684 218 692Q230 696 230 703Q230 707 224 707Q218 707 214 705Q198 699 184 696Q169 694 156 694Q113 694 90 718Q68 743 68 772Q68 800 91 823Q114 846 164 846Q227 846 280 817Q334 788 382 741Q433 691 475 620Q517 550 558 470Q600 389 649 307Q698 225 762 153Q775 139 788 124Q802 108 815 97Q781 92 745 90Q709 87 674 87Q622 87 576 92Q529 96 483 104Q436 113 378 132Q320 151 266 182Q211 212 172 255Q134 298 125 354Q124 359 124 364Q123 370 123 375Q123 421 154 451Q186 481 228 481Q259 481 288 464Q317 448 340 420Q363 393 374 360Q375 350 382 350Q388 350 388 361Q387 405 362 437Q338 469 301 486Q264 502 226 502Q187 502 152 486Q117 469 95 436Q73 404 73 356Q73 300 100 257Q128 214 174 182Q220 149 274 126Q328 104 382 90Q436 77 480 70Q525 63 574 59Q622 55 672 55Q715 55 758 59Q801 63 842 71Q859 58 877 48Q895 38 917 30Q931 24 938 24Q944 24 944 28Q944 35 928 45Q920 49 908 59Q896 69 882 82Q947 98 999 130Q1056 164 1080 202Q1105 240 1105 280Q1105 326 1077 372Q1049 417 1004 456Q959 495 905 524Q851 552 798 565Q747 578 695 584Q643 590 602 590Q595 590 588 590Q580 590 573 589Q539 637 503 682Q467 728 422 771Q367 823 302 850Q237 877 169 877ZM587 567Q625 568 672 561Q719 554 766 540Q844 516 906 471Q969 426 1006 371Q1042 316 1042 263Q1042 231 1026 202Q1011 173 976 150Q953 135 924 124Q895 113 863 106Q812 178 768 256Q723 334 680 413Q636 492 587 567Z"/><path d="M973 838Q932 838 912 808Q893 779 893 737Q893 698 908 656Q924 610 952 572Q981 534 1016 510Q1050 487 1084 487Q1125 487 1144 515Q1164 543 1164 586Q1164 616 1154 649Q1144 682 1127 714Q1140 727 1164 727Q1192 727 1212 709Q1232 691 1251 645Q1263 645 1263 654Q1244 700 1220 722Q1195 743 1157 742Q1134 742 1119 729Q1091 775 1052 806Q1014 838 973 838ZM987 816Q1010 816 1033 796Q1056 777 1075 752Q1094 727 1102 709Q1086 680 1084 666Q1081 651 1081 644Q1081 625 1091 615Q1101 605 1111 605Q1125 605 1135 617Q1137 606 1138 596Q1139 587 1139 578Q1139 552 1130 536Q1120 519 1100 519Q1079 519 1056 537Q1033 555 1012 585Q992 615 977 652Q964 683 957 710Q950 738 950 761Q950 786 959 801Q968 816 987 816Z"/><path d="M1155 846Q1191 773 1224 702Q1257 630 1292 565Q1312 529 1326 514Q1340 500 1363 500Q1371 500 1380 502Q1389 505 1398 505Q1404 505 1407 504Q1393 512 1370 544Q1348 575 1325 616Q1302 657 1284 693Q1303 670 1324 647Q1345 624 1370 603Q1394 582 1428 560Q1461 537 1493 522Q1525 507 1544 507Q1551 507 1554 508Q1554 508 1543 528Q1532 547 1516 578Q1499 610 1482 646Q1465 681 1452 714Q1438 746 1434 768Q1431 781 1431 792Q1431 808 1437 813Q1443 818 1450 818Q1469 818 1489 801Q1509 784 1528 758Q1546 731 1562 701Q1578 671 1589 645Q1601 645 1601 654Q1590 681 1574 714Q1557 746 1536 775Q1516 804 1491 823Q1466 842 1437 842Q1417 842 1396 828Q1374 814 1374 776Q1374 765 1376 752Q1378 740 1383 725Q1391 705 1402 682Q1413 659 1438 619Q1445 608 1446 602Q1448 596 1448 592Q1448 580 1437 580Q1428 580 1410 590Q1393 600 1367 625Q1342 649 1308 693Q1273 737 1228 823Q1221 836 1212 837Q1204 838 1189 839Q1179 840 1170 840Q1161 841 1155 846Z"/><path d="M1520 1157Q1425 1157 1425 1079Q1425 1042 1451 1013Q1477 984 1513 963Q1563 933 1611 915Q1659 897 1703 884Q1747 870 1785 854Q1794 828 1800 796Q1806 765 1809 735Q1812 705 1812 683Q1812 660 1809 653Q1798 674 1780 705Q1761 736 1736 766Q1712 797 1685 817Q1658 837 1630 837Q1620 837 1611 834Q1583 822 1570 800Q1558 778 1558 750Q1558 705 1584 653Q1610 601 1646 558Q1675 523 1714 502Q1753 481 1793 481Q1839 481 1879 512Q1894 524 1894 538Q1894 553 1882 553Q1872 553 1868 540Q1854 503 1823 503Q1798 503 1766 524Q1734 546 1706 578Q1682 605 1660 640Q1637 675 1622 709Q1608 743 1608 768Q1608 785 1616 797Q1624 809 1641 809Q1664 809 1690 787Q1715 765 1738 733Q1762 701 1780 668Q1797 635 1804 613Q1811 590 1823 584Q1835 579 1847 579Q1859 579 1867 573Q1871 595 1872 618Q1874 640 1874 663Q1874 709 1868 747Q1863 785 1850 828Q1886 806 1912 772Q1939 739 1956 704Q1974 670 1985 645Q1997 645 1997 654Q1984 681 1964 720Q1945 759 1916 796Q1886 832 1842 852Q1825 900 1794 953Q1762 1006 1719 1052Q1676 1099 1625 1128Q1574 1157 1520 1157ZM1496 1137Q1518 1137 1542 1128Q1567 1118 1589 1105Q1611 1092 1623 1083Q1646 1065 1670 1038Q1694 1011 1712 986Q1729 962 1747 936Q1765 909 1776 883L1735 896Q1702 906 1662 920Q1623 935 1584 953Q1545 971 1513 992Q1485 1011 1466 1042Q1448 1073 1448 1096Q1448 1113 1460 1125Q1471 1137 1496 1137Z"/><path d="M2006 842Q1965 842 1940 816Q1914 791 1914 763Q1914 740 1926 720Q1937 701 1956 701L1957 699Q1979 659 2000 618Q2020 576 2045 529Q2066 490 2090 465Q2115 440 2148 440Q2156 440 2170 444Q2184 447 2184 458Q2184 466 2175 466Q2168 466 2160 462Q2151 458 2146 458Q2127 458 2114 480Q2101 502 2101 527Q2101 554 2110 576Q2119 597 2131 617Q2143 637 2152 658Q2161 678 2161 702Q2161 750 2142 780Q2124 809 2094 824H2095Q2148 824 2182 774Q2217 725 2251 645Q2263 645 2263 654Q2244 699 2221 742Q2198 785 2167 813Q2136 841 2091 841Q2072 841 2056 837Q2033 842 2006 842ZM1991 736Q1991 760 2002 782Q2013 804 2042 815Q2068 800 2082 768Q2097 737 2097 703Q2097 675 2091 646Q2085 617 2078 589Q2072 561 2072 539Q2072 532 2072 526Q2073 521 2074 516Q2056 543 2038 579Q2019 615 2002 648Q1985 681 1971 702Q1991 705 1991 736ZM1958 786Q1958 802 1969 814Q1980 826 2002 826Q2012 826 2021 824Q2000 811 1988 791Q1975 771 1975 745Q1966 755 1962 766Q1958 776 1958 786Z"/><path d="M2469 841Q2446 841 2428 828Q2411 815 2411 775Q2411 758 2414 743Q2416 728 2420 711Q2411 726 2395 748Q2379 770 2360 791Q2340 812 2320 826Q2299 840 2281 840Q2255 840 2239 816Q2223 793 2223 755Q2223 714 2242 667Q2261 620 2294 577Q2327 534 2370 507Q2413 480 2460 480Q2483 480 2504 488Q2525 495 2541 512Q2548 519 2548 528Q2548 534 2543 538Q2538 542 2530 540Q2519 505 2483 505Q2466 505 2444 516Q2417 530 2386 560Q2356 591 2330 630Q2303 668 2286 707Q2269 746 2269 778Q2269 811 2294 811Q2316 811 2340 790Q2363 769 2384 738Q2406 706 2424 675Q2442 644 2452 625Q2467 598 2480 580Q2493 562 2517 562Q2528 562 2539 565Q2550 568 2562 566Q2532 596 2510 637Q2487 678 2475 718Q2463 757 2463 784Q2463 814 2483 814Q2499 814 2518 796Q2536 778 2554 750Q2571 723 2586 694Q2601 666 2610 645Q2615 645 2618 646Q2622 647 2622 654Q2621 658 2618 662Q2616 667 2611 678Q2603 694 2589 721Q2575 748 2556 776Q2537 803 2515 822Q2493 841 2469 841Z"/><path d="M2830 840Q2824 840 2820 840Q2815 839 2808 838Q2783 833 2774 810Q2764 788 2764 762Q2764 746 2766 730Q2769 715 2773 703Q2764 719 2750 742Q2736 764 2718 786Q2700 808 2680 823Q2660 838 2639 838Q2618 838 2600 826Q2582 814 2577 792Q2576 787 2576 782Q2575 778 2575 774Q2575 748 2589 721Q2603 694 2622 654Q2617 654 2614 653Q2610 652 2610 645Q2633 593 2650 560Q2666 528 2674 514Q2687 492 2715 492H2777Q2760 505 2746 520Q2733 536 2713 577Q2713 577 2706 591Q2699 605 2688 626Q2678 647 2668 669Q2657 691 2650 707Q2640 729 2635 748Q2630 767 2630 781Q2630 816 2653 816Q2669 816 2689 796Q2712 774 2736 734Q2761 695 2784 651Q2807 607 2825 570Q2843 532 2852 514Q2857 503 2866 498Q2874 492 2890 492H2951Q2945 498 2934 505Q2922 512 2911 530Q2897 554 2886 574Q2875 595 2856 636Q2852 645 2840 671Q2829 697 2819 728Q2809 759 2809 784Q2809 800 2816 810Q2823 820 2839 820Q2867 820 2892 797Q2918 774 2938 741Q2959 708 2972 677Q2971 669 2970 654Q2968 638 2968 627Q2968 562 2988 516Q3009 471 3043 471Q3062 471 3062 488Q3062 491 3056 512Q3049 532 3038 562Q3028 592 3015 625Q3002 658 2989 687Q2992 704 3003 715Q3014 726 3031 726Q3051 726 3068 708Q3086 689 3105 645Q3117 645 3117 654Q3101 694 3078 718Q3056 742 3028 742Q2994 742 2979 707Q2952 761 2914 800Q2877 840 2830 840Z"/><path d="M3322 841Q3299 841 3282 828Q3264 815 3264 775Q3264 758 3266 743Q3269 728 3273 711Q3264 726 3248 748Q3232 770 3212 791Q3193 812 3172 826Q3152 840 3134 840Q3108 840 3092 816Q3076 793 3076 755Q3076 714 3095 667Q3114 620 3147 577Q3180 534 3223 507Q3266 480 3313 480Q3336 480 3357 488Q3378 495 3394 512Q3401 519 3401 528Q3401 534 3396 538Q3391 542 3383 540Q3372 505 3336 505Q3319 505 3297 516Q3270 530 3240 560Q3209 591 3182 630Q3156 668 3139 707Q3122 746 3122 778Q3122 811 3147 811Q3169 811 3192 790Q3216 769 3238 738Q3259 706 3277 675Q3295 644 3305 625Q3320 598 3333 580Q3346 562 3370 562Q3381 562 3392 565Q3403 568 3415 566Q3385 596 3362 637Q3340 678 3328 718Q3316 757 3316 784Q3316 814 3336 814Q3352 814 3370 796Q3389 778 3406 750Q3424 723 3439 694Q3454 666 3463 645Q3468 645 3472 646Q3475 647 3475 654Q3474 658 3472 662Q3469 667 3464 678Q3456 694 3442 721Q3428 748 3409 776Q3390 803 3368 822Q3346 841 3322 841Z"/><path d="M3670 310Q3657 329 3641 358Q3625 387 3612 414Q3598 441 3591 455H3683Q3683 459 3680 468Q3676 477 3666 481H3579Q3567 508 3552 546Q3536 584 3522 625Q3507 666 3498 702Q3488 737 3488 759Q3488 789 3496 804Q3504 818 3525 818Q3552 818 3577 792Q3602 765 3624 725Q3647 685 3664 645Q3676 645 3676 654Q3665 681 3649 713Q3633 745 3612 774Q3592 804 3566 822Q3541 841 3510 841Q3468 841 3453 818Q3438 794 3438 757Q3438 730 3448 692Q3458 653 3472 612Q3487 571 3501 536Q3515 500 3523 481H3459Q3459 473 3466 464Q3473 455 3481 455H3534Q3542 439 3552 415Q3563 391 3581 362Q3596 338 3620 324Q3643 310 3670 310Z"/><circle class="ink__pen" r="70" cx="0" cy="0"/></svg>
     </h1>
     <div class="cover__nick">ฝน <i>♡</i> โต้ง</div>
     <div class="cover__date"><span>Sunday</span><b>22 · 11 · 2026</b><span>Roi Et</span></div>
@@ -148,7 +194,7 @@
         <div class="invite__guest">เรียนเชิญ <b data-guest>แขกผู้มีเกียรติ</b></div>
 
         <div class="parents">
-          <div class="parents__col"><span>คุณยายเสาร์ รูตังติ</span><span>คุณแม่ฝน สีทะโน</span></div>
+          <div class="parents__col"><span>คุณยายเสาร์ รูตังติ</span><span>คุณแม่ฝัน สีทะโน</span></div>
           <div class="parents__and">และ</div>
           <div class="parents__col"><span>คุณพ่อพูน วินทะไชย</span><span>คุณแม่ต้อย วินทะไชย</span></div>
         </div>
@@ -180,7 +226,11 @@
       <div class="std__month">November</div>
       <div class="scratch-row" id="scratch-row">
         <div class="scratch">
-          <img class="scratch__art" src="assets/images/save-the-date-22.png" width="500" height="447" alt="วันที่ 22 ภาพวาดเจ้าบ่าวและเจ้าสาว" loading="lazy">
+          <div class="std-art" role="img" aria-label="วันที่ 22 ภาพวาดเจ้าบ่าวและเจ้าสาว">
+            <img class="std-art__groom" src="assets/images/std-groom.png" width="253" height="447" alt="" loading="lazy">
+            <img class="std-art__bride" src="assets/images/std-bride.png" width="247" height="447" alt="" loading="lazy">
+            <svg class="std-art__heart" viewBox="0 0 32 30" aria-hidden="true"><path d="M16 29 C3 20 0 12 4 6 C8 0 14 2 16 7 C18 2 24 0 28 6 C32 12 29 20 16 29 Z"/></svg>
+          </div>
           <canvas aria-hidden="true"></canvas>
         </div>
       </div>
@@ -217,19 +267,19 @@
       <svg class="laurel laurel--sm draw" aria-hidden="true"><use href="#laurel"/></svg>
     </div>
     <ol class="timeline" id="timeline">
-      <li class="tl reveal">
+      <li class="tl reveal" data-at="07:09">
         <div class="tl__icon"><img src="assets/images/icon-monk.png" width="64" height="75" alt="" loading="lazy"></div>
         <div class="tl__body"><div class="tl__time">07.09<small>น.</small></div><div class="tl__th">พิธีสงฆ์</div><div class="tl__en">Buddhist Blessing Ceremony</div></div>
       </li>
-      <li class="tl reveal">
+      <li class="tl reveal" data-at="08:09">
         <div class="tl__icon"><img src="assets/images/icon-khanmak.png" width="83" height="85" alt="" loading="lazy"></div>
         <div class="tl__body"><div class="tl__time">08.09<small>น.</small></div><div class="tl__th">พิธีแห่ขันหมาก</div><div class="tl__en">Khan Maak Procession</div></div>
       </li>
-      <li class="tl reveal">
+      <li class="tl reveal" data-at="09:09">
         <div class="tl__icon"><img src="assets/images/icon-baisri.png" width="46" height="85" alt="" loading="lazy"></div>
         <div class="tl__body"><div class="tl__time">09.09<small>น.</small></div><div class="tl__th">บายศรีสู่ขวัญ</div><div class="tl__en">Bai Sri Su Khwan Ceremony</div></div>
       </li>
-      <li class="tl reveal">
+      <li class="tl reveal" data-at="10:30">
         <div class="tl__icon"><img src="assets/images/icon-dining.png" width="76" height="63" alt="" loading="lazy"></div>
         <div class="tl__body"><div class="tl__time">10.30<small>น.</small></div><div class="tl__th">รับประทานอาหาร</div><div class="tl__en">Wedding Feast</div></div>
       </li>
@@ -237,7 +287,7 @@
   </section>
 
   <!-- ===================== Love story: quote + two drifting photo reels ===================== -->
-  <section class="story luxe" aria-label="ความทรงจำของเรา">
+  <section class="story luxe" aria-label="ความทรงจำของเรา" data-pause>
     <div class="story__head reveal">
       <div class="eyebrow">Our Love Story</div>
       <p class="story__quote">ทุกการเดินทางมีความหมาย<br>เมื่อมีเธออยู่ข้างกัน</p>
@@ -300,23 +350,20 @@
     </div>
   </section>
 
-  <!-- ===================== Venue ===================== -->
-  <section class="venue luxe" id="venue">
+  <!-- ===================== Online gift — shown only when ECARD_CONFIG.gift.qr is set (js/gift.js) ===================== -->
+  <section class="gift" id="gift" hidden>
     <div class="section-head reveal">
-      <div class="eyebrow">Location</div>
-      <div class="title foil-text foil-text--light">สถานที่จัดงาน</div>
+      <div class="eyebrow">Wedding Gift</div>
+      <div class="title">ร่วมแสดงความยินดี</div>
       <svg class="laurel laurel--sm draw" aria-hidden="true"><use href="#laurel"/></svg>
     </div>
-    <p class="venue__addr reveal">บ้านเลขที่ 246 ม.5 ต.รอบเมือง<br>อ.เมือง จ.ร้อยเอ็ด</p>
-    <div class="map reveal">
-      <iframe src="https://maps.google.com/maps?q=16.042557,103.659509&amp;hl=th&amp;z=15&amp;output=embed" title="แผนที่สถานที่จัดงาน" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
-    </div>
-    <div class="venue__row reveal">
-      <div class="qr"><img src="assets/images/qr-map.svg" width="174" height="174" alt="QR Code แผนที่ไปงาน"><span>Scan me</span></div>
-      <div class="venue__actions">
-        <a class="btn btn--foil" href="https://maps.app.goo.gl/nRfCRox617bbrhkU9" target="_blank" rel="noopener">เปิด Google Maps</a>
-        <a class="btn btn--outline" href="https://www.google.com/maps/dir/?api=1&amp;destination=16.042557,103.659509" target="_blank" rel="noopener">นำทางไปงาน</a>
-      </div>
+    <p class="gift__note reveal">สำหรับท่านที่ต้องการร่วมแสดงความยินดีผ่านซองออนไลน์</p>
+    <div class="gift__card luxe reveal">
+      <img class="gift__qr" alt="QR Code สำหรับโอนเงิน" width="200" height="200">
+      <div class="gift__bank" hidden></div>
+      <div class="gift__name" hidden></div>
+      <div class="gift__account"><span class="gift__number" hidden></span><button class="gift__copy" type="button" hidden>คัดลอก</button></div>
+      <a class="btn btn--foil gift__save" download="QR-ฝน-โต้ง.jpg">บันทึกรูป QR</a>
     </div>
   </section>
 
@@ -327,6 +374,17 @@
       <div class="title">อัลบั้มภาพ</div>
       <svg class="laurel laurel--sm draw" aria-hidden="true"><use href="#laurel"/></svg>
     </div>
+    <div class="book reveal" id="book">
+      <div class="book__stage" tabindex="0" aria-label="สมุดภาพ แตะขวาเพื่อพลิกไปข้างหน้า แตะซ้ายเพื่อย้อนกลับ">
+        <div class="book__inner is-closed"></div>
+      </div>
+      <div class="book__nav">
+        <button type="button" data-book="-1" aria-label="หน้าก่อน">‹</button>
+        <span class="book__count" aria-live="polite">ปก</span>
+        <button type="button" data-book="1" aria-label="หน้าถัดไป">›</button>
+      </div>
+    </div>
+    <div class="album__label reveal">ภาพทั้งหมด · แตะเพื่อดูภาพใหญ่</div>
     <div class="album" id="album" data-count="19">
       <!-- photos:album -->
       <button class="album__item" type="button" data-full="assets/couple/001.jpg" data-number="001"><img src="assets/couple/001-s.jpg" width="1044" height="1566" alt="ภาพหมายเลข 001" loading="lazy"><span class="album__number">No. 001</span></button>
@@ -353,6 +411,29 @@
     <button class="btn btn--ghost gallery__more" id="gallery-more" hidden type="button">ดูภาพทั้งหมด (19 ภาพ)</button>
   </section>
 
+  <!-- ===================== Photo booth (js/booth.js) ===================== -->
+  <section class="booth" id="booth">
+    <div class="section-head reveal">
+      <div class="eyebrow">Photo Booth</div>
+      <div class="title">ถ่ายรูปกับกรอบงานแต่ง</div>
+      <svg class="laurel laurel--sm draw" aria-hidden="true"><use href="#laurel"/></svg>
+    </div>
+    <p class="booth__note reveal">เซลฟีในกรอบที่มีรูปฝนและโต้งอยู่ด้วย เลือกพื้นหลังได้ 6 แบบ<br>แล้วบันทึกหรือแชร์ลง LINE / IG ได้ทันที</p>
+    <div class="booth__preview reveal">
+      <canvas width="540" height="675" role="img" aria-label="ตัวอย่างรูปพร้อมกรอบงานแต่ง"></canvas>
+      <span class="booth__tag">ตัวอย่าง</span>
+    </div>
+    <div class="booth__picker reveal">
+      <span class="booth__picker-label">เลือกพื้นหลังกรอบ</span>
+      <div class="booth__themes" role="radiogroup" aria-label="เลือกพื้นหลังกรอบ"></div>
+    </div>
+    <div class="booth__actions reveal">
+      <button class="btn btn--foil" id="booth-camera" type="button">เปิดกล้องถ่ายรูป</button>
+      <label class="btn btn--ghost" for="booth-file">เลือกรูปจากเครื่อง</label>
+      <input type="file" id="booth-file" accept="image/*" hidden>
+    </div>
+  </section>
+
   <!-- ===================== Thank you ===================== -->
   <footer class="footer">
     <div class="footer__photo reveal"><img src="assets/couple/004-s.jpg" width="480" height="720" alt="ฝนและโต้งถือป้าย Bride และ Groom" loading="lazy"></div>
@@ -369,18 +450,83 @@
     </div>
   </footer>
 
+  <!-- ===================== Wishes: floating lanterns (js/lanterns.js) ===================== -->
+  <section class="wishes" id="wishes" data-pause>
+    <div class="sky" aria-label="ท้องฟ้าโคมอวยพร"><i class="sky__moon" aria-hidden="true"></i><i class="sky__stars" aria-hidden="true"></i></div>
+    <div class="section-head wishes__head reveal">
+      <div class="eyebrow">Wishes</div>
+      <div class="title foil-text foil-text--light">ลอยโคมอวยพร</div>
+      <svg class="laurel laurel--sm draw" aria-hidden="true"><use href="#laurel"/></svg>
+      <p class="wishes__intro">เขียนคำอวยพรถึงฝนและโต้ง แล้วปล่อยโคมขึ้นฟ้า<br>แตะโคมที่ลอยอยู่เพื่ออ่านคำอวยพร</p>
+      <div class="wishes__count" id="wish-count" hidden></div>
+    </div>
+    <div class="wish-card" id="wish-card" role="status" aria-live="polite" hidden><b></b><p></p></div>
+    <form class="wish-form reveal" id="wish-form" novalidate>
+      <input id="wish-name" maxlength="40" autocomplete="name" placeholder="ชื่อของท่าน" aria-label="ชื่อของท่าน">
+      <textarea id="wish-message" maxlength="200" rows="3" placeholder="คำอวยพรถึงบ่าวสาว…" aria-label="คำอวยพร"></textarea>
+      <button class="btn btn--foil" type="submit">ปล่อยโคมอวยพร</button>
+      <button class="wish-form__line" id="wish-line" type="button" hidden>ส่งคำอวยพรนี้ถึงบ่าวสาวทาง LINE</button>
+    </form>
+  </section>
+
+  <!-- ===================== Venue — last section of the card ===================== -->
+  <section class="venue luxe" id="venue">
+    <div class="section-head reveal">
+      <div class="eyebrow">Location</div>
+      <div class="title foil-text foil-text--light">สถานที่จัดงาน</div>
+      <svg class="laurel laurel--sm draw" aria-hidden="true"><use href="#laurel"/></svg>
+    </div>
+    <p class="venue__addr reveal">บ้านเลขที่ 246 ม.5 ต.รอบเมือง<br>อ.เมือง จ.ร้อยเอ็ด</p>
+    <div class="map reveal">
+      <iframe src="https://maps.google.com/maps?q=16.042557,103.659509&amp;hl=th&amp;z=15&amp;output=embed" title="แผนที่สถานที่จัดงาน" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+    </div>
+    <div class="venue__row reveal">
+      <div class="qr"><img src="assets/images/qr-map.svg" width="174" height="174" alt="QR Code แผนที่ไปงาน"><span>Scan me</span></div>
+      <div class="venue__actions">
+        <a class="btn btn--foil" href="https://maps.app.goo.gl/nRfCRox617bbrhkU9" target="_blank" rel="noopener">เปิด Google Maps</a>
+        <a class="btn btn--outline" href="https://www.google.com/maps/dir/?api=1&amp;destination=16.042557,103.659509" target="_blank" rel="noopener">นำทางไปงาน</a>
+      </div>
+    </div>
+  </section>
+
 </main>
 </div>
 
 <div class="progress" id="progress" aria-hidden="true"></div>
+<button class="music" id="music" type="button" aria-pressed="false" aria-label="เปิดเพลง" hidden><span class="music__disc"></span><span class="music__note" aria-hidden="true">♪</span></button>
+<div class="live" id="live" role="status" hidden><span class="live__dot" aria-hidden="true"></span><span class="live__text"></span><a class="live__btn" href="#venue" hidden></a></div>
 <nav class="dock" id="dock" aria-label="เมนูลัด">
   <button class="dock__btn" type="button" data-target="date"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>วันงาน</button>
   <button class="dock__btn" type="button" data-target="schedule"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>กำหนดการ</button>
-  <button class="dock__btn" type="button" data-target="venue"><svg viewBox="0 0 24 24"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0C18.5 15.4 12 21 12 21z"/><circle cx="12" cy="10" r="2.3"/></svg>แผนที่</button>
   <button class="dock__btn" type="button" data-target="gallery"><svg viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M20.5 16l-5-5-8.5 8.5"/></svg>รูปภาพ</button>
+  <button class="dock__btn" type="button" data-target="wishes"><svg viewBox="0 0 24 24"><path d="M8 4.5h8l1.5 9.5a5.5 5.5 0 0 1-11 0z"/><path d="M10 19.5h4M12 17v2.5"/></svg>อวยพร</button>
+  <button class="dock__btn" type="button" data-target="venue"><svg viewBox="0 0 24 24"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0C18.5 15.4 12 21 12 21z"/><circle cx="12" cy="10" r="2.3"/></svg>แผนที่</button>
   <button class="dock__btn" type="button" data-share><svg viewBox="0 0 24 24"><circle cx="18" cy="5.5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="18.5" r="2.5"/><path d="M8.2 10.8l7.6-4.1M8.2 13.2l7.6 4.1"/></svg>แชร์</button>
 </nav>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<div class="booth-modal" id="booth-modal" role="dialog" aria-modal="true" aria-label="Photo booth" hidden>
+  <div class="booth-modal__stage">
+    <canvas id="booth-live"></canvas>
+    <img id="booth-result" alt="รูปพร้อมกรอบงานแต่ง" hidden>
+    <div class="booth-modal__count" id="booth-count" aria-live="assertive"></div>
+    <div class="booth-modal__flash"></div>
+  </div>
+  <div class="booth-modal__themes" role="radiogroup" aria-label="เลือกพื้นหลังกรอบ"></div>
+  <div class="booth-modal__bar booth-modal__bar--live">
+    <button type="button" class="booth-modal__icon" data-booth="close" aria-label="ปิด">×</button>
+    <button type="button" class="booth-modal__shutter" data-booth="shoot" aria-label="ถ่ายรูป"></button>
+    <button type="button" class="booth-modal__icon" data-booth="flip" aria-label="สลับกล้องหน้า/หลัง">⟲</button>
+  </div>
+  <div class="booth-modal__bar booth-modal__bar--result" hidden>
+    <button type="button" class="btn btn--ghost" data-booth="retake">ถ่ายใหม่</button>
+    <a class="btn btn--foil" id="booth-save" href="#">บันทึกรูป</a>
+    <button type="button" class="btn btn--outline" id="booth-share" data-booth="share" hidden>แชร์</button>
+    <button type="button" class="booth-modal__icon" data-booth="close" aria-label="ปิด">×</button>
+  </div>
+  <p class="booth-modal__hint">ถ้าบันทึกไม่ได้ ให้กดค้างที่รูปแล้วเลือก "บันทึกรูปภาพ"</p>
+  <video id="booth-video" playsinline muted hidden></video>
+</div>
 
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="ภาพขยาย">
   <button class="lightbox__close" type="button" aria-label="ปิด">×</button>
@@ -390,13 +536,25 @@
   <div class="lightbox__count"></div>
 </div>
 
-<script src="js/guest.js?v=202610051304"></script>
-<script src="js/countdown.js?v=202610051304"></script>
-<script src="js/scroll.js?v=202610051304"></script>
-<script src="js/intro.js?v=202610051304"></script>
-<script src="js/gallery.js?v=202610051304"></script>
-<script src="js/scratch.js?v=202610051304"></script>
-<script src="js/effects.js?v=202610051304"></script>
-<script src="js/dock.js?v=202610051304"></script>
+<script src="js/config.js?v=202610051414"></script>
+<script src="js/guest.js?v=202610051414"></script>
+<script src="js/api.js?v=202610051414"></script>
+<script src="js/audio.js?v=202610051414"></script>
+<script src="js/motion.js?v=202610051414"></script>
+<script src="js/dayof.js?v=202610051414"></script>
+<script src="js/countdown.js?v=202610051414"></script>
+<script src="js/scroll.js?v=202610051414"></script>
+<script src="js/particles.js?v=202610051414"></script>
+<script src="js/intro.js?v=202610051414"></script>
+<script src="js/handwriting.js?v=202610051414"></script>
+<script src="js/gallery.js?v=202610051414"></script>
+<script src="js/book.js?v=202610051414"></script>
+<script src="js/scratch.js?v=202610051414"></script>
+<script src="js/effects.js?v=202610051414"></script>
+<script src="js/lanterns.js?v=202610051414"></script>
+<script src="js/gift.js?v=202610051414"></script>
+<script src="js/booth-photo.js?v=202610051414"></script>
+<script src="js/booth.js?v=202610051414"></script>
+<script src="js/dock.js?v=202610051414"></script>
 </body>
 </html>

@@ -17,6 +17,7 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function () { toastEl.classList.remove('is-shown'); }, TOAST_MS);
   }
+  window.EcardToast = toast; // used by wishes, photo booth, gift
 
   /* ----- Share (without the guest's name in the link) ----- */
   function cleanUrl() {

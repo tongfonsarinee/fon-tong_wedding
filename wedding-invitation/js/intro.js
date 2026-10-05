@@ -1,5 +1,8 @@
-// Opening screen: bokeh + gold glitter, then the envelope sequence
-// (seal pops → flap opens → letter rises → fly into the card); starts petals after opening
+// Opening screen. Tap the wax seal (or the button):
+//   seal cracks (music + sound + haptics start) → flap opens → letter rises
+//   → gold dust gathers into the S·P monogram and bursts into petals (js/particles.js)
+//   → 6-second cinematic photo trailer → fly into the card.
+// Returning guests get the short version (envelope → card). "ข้าม" skips at any point.
 (function () {
   'use strict';
 
@@ -10,20 +13,27 @@
   var SPARKLE_COLORS = ['#D9B676', '#F0D9A4', '#FFFFFF', '#E7B7AA'];
   var PETAL_COUNT = 16;
   var PETAL_LIGHT_RATIO = 0.4;
-  var GOLD_DUST_COUNT = 14; // gold specks falling among the petals
+  var GOLD_DUST_COUNT = 14;
   var CARD_THEME_COLOR = '#F3D5CC';
+  var SEEN_KEY = 'ecard-seen';
 
   // ms after the tap — each step matches a transition in css/intro.css
   var STEP_FLAP_OPEN = 380;
-  var STEP_FLAP_BEHIND = 780; // flap has passed vertical: tuck it behind the letter
+  var STEP_FLAP_BEHIND = 780;  // flap has passed vertical: tuck it behind the letter
   var STEP_LETTER_OUT = 820;
-  var STEP_FLY_IN = 1950;
-  var STEP_REMOVE = 2850; // .intro opacity/transform transition is .9s
+  var STEP_MAGIC = 1650;       // first visit: gold dust rises out of the letter
+  var STEP_SHORT_FLY = 1950;   // returning visit: straight into the card
+  var SHOT_MS = 1150;          // each cinematic shot
+  var TITLE_MS = 1700;         // closing title card
+  var REMOVE_AFTER_FLY_MS = 900; // .intro opacity/transform transition
 
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var audio = window.EcardAudio;
 
   function rand(min, max) { return min + Math.random() * (max - min); }
   function pick(list) { return list[Math.floor(Math.random() * list.length)]; }
+  function sfx(name) { if (audio) audio.sfx(name); }
+  function buzz(pattern) { if (audio) audio.buzz(pattern); }
 
   function spawn(container, count, build) {
     var frag = document.createDocumentFragment();
@@ -99,13 +109,24 @@
   function enterCard() {
     var card = document.querySelector('.card');
     if (card) card.classList.add('is-entered');
+    document.dispatchEvent(new CustomEvent('ecard:entered'));
     startPetals();
+  }
+
+  function hasSeen() {
+    try { return localStorage.getItem(SEEN_KEY) === '1'; } catch (e) { return false; }
+  }
+  function markSeen() {
+    try { localStorage.setItem(SEEN_KEY, '1'); } catch (e) { /* private mode */ }
   }
 
   function initIntro() {
     var intro = document.getElementById('intro');
     var openBtn = document.getElementById('intro-open');
     var seal = document.getElementById('intro-seal');
+    var skipBtn = document.getElementById('intro-skip');
+    var dust = document.getElementById('intro-dust');
+    var cinema = document.getElementById('cinema');
     if (!intro || !openBtn) {
       enterCard();
       return;
@@ -119,23 +140,74 @@
       spawn(sky, GLINT_COUNT, makeGlint);
     }
 
-    var opened = false;
+    var shortVersion = hasSeen() || reduceMotion || !window.EcardParticles || !dust || !cinema;
+    var shots = cinema ? Array.prototype.slice.call(cinema.querySelectorAll('.cinema__shot')) : [];
 
-    function step(delay, className) {
-      setTimeout(function () { intro.classList.add(className); }, delay);
+    // load the trailer photos while the guest looks at the envelope
+    if (!shortVersion) {
+      window.addEventListener('load', function () {
+        shots.forEach(function (shot) {
+          var img = shot.querySelector('img[data-src]');
+          if (img) img.src = img.dataset.src;
+        });
+      });
+    }
+
+    var opened = false;
+    var flown = false;
+    var timers = [];
+    var particles = null;
+
+    function later(ms, fn) { timers.push(setTimeout(fn, ms)); }
+    function step(ms, className, fn) {
+      later(ms, function () {
+        intro.classList.add(className);
+        if (fn) fn();
+      });
     }
 
     function flyIn() {
+      if (flown) return;
+      flown = true;
+      timers.forEach(clearTimeout);
+      if (particles) particles.stop();
+      markSeen();
       intro.classList.add('is-opening');
       var themeMeta = document.querySelector('meta[name="theme-color"]');
       if (themeMeta) themeMeta.setAttribute('content', CARD_THEME_COLOR);
       window.scrollTo(0, 0);
       enterCard();
+      setTimeout(function () {
+        intro.remove();
+        document.body.classList.remove('is-locked');
+      }, reduceMotion ? 0 : REMOVE_AFTER_FLY_MS);
     }
 
-    function finish() {
-      intro.remove();
-      document.body.classList.remove('is-locked');
+    function playCinema() {
+      if (flown) return;
+      intro.classList.add('is-cinema');
+      shots.forEach(function (shot, i) {
+        later(i * SHOT_MS, function () {
+          shot.classList.add('is-on');
+          if (shots[i - 1]) shots[i - 1].classList.add('is-off');
+        });
+      });
+      later(shots.length * SHOT_MS, function () {
+        intro.classList.add('is-title');
+        sfx('chime');
+      });
+      later(shots.length * SHOT_MS + TITLE_MS, flyIn);
+    }
+
+    function playMagic() {
+      intro.classList.add('is-magic');
+      var letter = intro.querySelector('.envelope__letter');
+      var r = letter ? letter.getBoundingClientRect() : null;
+      particles = window.EcardParticles.play(dust, {
+        origin: r ? { x: r.left + r.width / 2, y: r.top + r.height / 2 } : null,
+        onFormed: function () { sfx('chime'); buzz([12, 40, 12]); },
+        onBurst: function () { sfx('sparkle'); buzz(30); playCinema(); }
+      });
     }
 
     function open() {
@@ -143,13 +215,16 @@
       opened = true;
       openBtn.disabled = true;
       if (seal) seal.disabled = true;
+      if (audio) audio.start();
+      if (window.EcardMotion) window.EcardMotion.request();
 
       if (reduceMotion) {
         flyIn();
-        finish();
         return;
       }
 
+      sfx('crack');
+      buzz([18, 40, 30]);
       // hearts + confetti burst from the seal as it breaks
       if (seal) {
         var r = seal.getBoundingClientRect();
@@ -158,15 +233,16 @@
         }));
       }
       intro.classList.add('is-unsealing');
-      step(STEP_FLAP_OPEN, 'is-flap-open');
+      step(STEP_FLAP_OPEN, 'is-flap-open', function () { sfx('rustle'); });
       step(STEP_FLAP_BEHIND, 'is-flap-behind');
       step(STEP_LETTER_OUT, 'is-letter-out');
-      setTimeout(flyIn, STEP_FLY_IN);
-      setTimeout(finish, STEP_REMOVE);
+      if (shortVersion) later(STEP_SHORT_FLY, flyIn);
+      else later(STEP_MAGIC, playMagic);
     }
 
     openBtn.addEventListener('click', open);
     if (seal) seal.addEventListener('click', open);
+    if (skipBtn) skipBtn.addEventListener('click', flyIn);
   }
 
   initIntro();

@@ -1,30 +1,29 @@
 /* ==========================================================================
    Content sections — invitation paper, schedule timeline, love-story reels,
    bride & groom, dress code, venue, footer
-   Behaviour: js/effects.js (paper tilt), js/scroll.js (timeline progress)
+   Behaviour: js/motion.js (paper tilt + sheen via --tx/--ty), js/scroll.js (timeline progress),
+   js/dayof.js (live schedule badges)
    ========================================================================== */
 
 /* ---------- Invitation: letterpress paper with gold corners ---------- */
-.invite { padding: 26px 16px 50px; }
+.invite { padding: 18px 16px 18px; }
 .paper {
   position: relative; isolation: isolate;
   padding: 50px 24px 44px; border-radius: 10px;
   display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center;
   background: var(--grain), linear-gradient(180deg, #FFFDF9, #FBF2E7);
   box-shadow: 0 46px 80px -44px rgba(125, 56, 24, .6), 0 2px 0 rgba(255, 255, 255, .9) inset;
-  transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
-  transition: transform .6s cubic-bezier(.2, .8, .2, 1);
+  transform: perspective(1000px) rotateX(calc(var(--ty, 0) * -5deg)) rotateY(calc(var(--tx, 0) * 6deg));
 }
-.paper.is-tilting { transition-duration: .12s; }
 /* fine inner rule */
 .paper::before { content: ''; position: absolute; inset: 11px; z-index: -1; border: 1px solid rgba(190, 151, 94, .35); border-radius: 4px; pointer-events: none; }
 /* light that follows the pointer (desktop) */
 .paper__sheen {
   position: absolute; inset: 0; z-index: 2; border-radius: inherit; pointer-events: none; opacity: 0;
-  background: radial-gradient(circle at var(--mx, 50%) var(--my, 0%), rgba(255, 244, 220, .65), rgba(255, 244, 220, 0) 45%);
-  mix-blend-mode: soft-light; transition: opacity .4s;
+  background: radial-gradient(circle at calc(50% + var(--tx, 0) * 45%) calc(30% + var(--ty, 0) * 45%), rgba(255, 244, 220, .7), rgba(255, 244, 220, 0) 45%);
+  mix-blend-mode: soft-light; transition: opacity .6s;
 }
-.paper.is-tilting .paper__sheen { opacity: 1; }
+.has-motion .paper__sheen { opacity: 1; }
 .paper__corner { position: absolute; width: 52px; height: 52px; color: var(--gold); fill: none; stroke: currentColor; stroke-width: 1.1; stroke-linecap: round; }
 .paper__corner--tl { top: 17px; left: 17px; }
 .paper__corner--tr { top: 17px; right: 17px; transform: scaleX(-1); }
@@ -57,7 +56,7 @@
 .invite__sorry { margin-top: 4px; font-size: 12.5px; font-weight: 300; color: var(--muted); }
 
 /* ---------- Schedule: gold line that fills as you scroll ---------- */
-.schedule { padding: 62px 20px 50px; display: flex; flex-direction: column; gap: 32px; background: linear-gradient(180deg, transparent, rgba(248, 227, 221, .55) 30%, rgba(248, 227, 221, .55) 70%, transparent); }
+.schedule { padding: 34px 20px 34px; display: flex; flex-direction: column; gap: 24px; background: linear-gradient(180deg, transparent, rgba(248, 227, 221, .55) 30%, rgba(248, 227, 221, .55) 70%, transparent); }
 .timeline { --progress: 0; position: relative; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 18px; }
 .timeline::before, .timeline::after { content: ''; position: absolute; left: 37px; top: 30px; bottom: 30px; width: 2px; margin-left: -1px; border-radius: 2px; }
 .timeline::before { background: rgba(190, 151, 94, .25); }
@@ -87,7 +86,7 @@
 .tl__en { font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--muted); }
 
 /* ---------- Love story: quote + two photo reels drifting in opposite directions ---------- */
-.story { padding: 58px 0 56px; display: flex; flex-direction: column; gap: 30px; text-align: center; overflow: hidden; }
+.story { padding: 42px 0 40px; display: flex; flex-direction: column; gap: 24px; text-align: center; overflow: hidden; }
 .story__head { padding: 0 28px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
 .story__quote { font-size: 19px; font-weight: 300; line-height: 1.85; color: #FBEFE2; }
 .story__en { font-family: var(--script); font-size: 32px; line-height: 1.2; padding: 0 .1em; }
@@ -102,7 +101,7 @@
 }
 
 /* ---------- Bride & groom ---------- */
-.couple { padding: 62px 16px 34px; display: flex; flex-direction: column; gap: 30px; }
+.couple { padding: 36px 16px 20px; display: flex; flex-direction: column; gap: 24px; }
 .couple__grid { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
 .person { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; }
 .person--offset { margin-top: 56px; }
@@ -133,7 +132,7 @@
 }
 
 /* ---------- Dress code ---------- */
-.dress { padding: 40px 20px 60px; display: flex; flex-direction: column; align-items: center; gap: 26px; }
+.dress { padding: 28px 20px 36px; display: flex; flex-direction: column; align-items: center; gap: 20px; }
 .swatches { display: flex; justify-content: center; flex-wrap: wrap; gap: 18px; }
 .swatch { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 12px; }
 .swatch span {
@@ -146,8 +145,8 @@
 .swatch figcaption { font-family: var(--caps); font-size: 10.5px; letter-spacing: .2em; padding-left: .2em; text-transform: uppercase; color: var(--cocoa); }
 .swatch small { display: block; margin-top: 2px; font-family: var(--sans); font-size: 13px; letter-spacing: 0; text-transform: none; color: var(--muted); }
 
-/* ---------- Venue ---------- */
-.venue { padding: 58px 20px 60px; display: flex; flex-direction: column; align-items: center; gap: 20px; text-align: center; }
+/* ---------- Venue — last section, extra bottom space for the dock ---------- */
+.venue { padding: 40px 20px 116px; display: flex; flex-direction: column; align-items: center; gap: 20px; text-align: center; }
 .venue__addr { font-size: 17px; line-height: 1.85; color: #FBEFE2; }
 .map {
   position: relative; width: 100%; aspect-ratio: 4 / 3.2; border-radius: 22px; overflow: hidden;
@@ -166,8 +165,8 @@
 .venue__actions { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 .venue__actions .btn { padding: 0 20px; }
 
-/* ---------- Footer (extra bottom space for the dock) ---------- */
-.footer { padding: 50px 24px 124px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+/* ---------- Footer ---------- */
+.footer { padding: 30px 24px 36px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
 .footer__photo { position: relative; width: 200px; aspect-ratio: 3 / 4; margin-bottom: 10px; }
 .footer__photo::before {
   content: ''; position: absolute; inset: -8px; border: 1px solid var(--gold); border-radius: 108px 108px 18px 18px; pointer-events: none;
@@ -194,6 +193,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .paper { transition: none; }
   .reel__track, .swatch span { animation: none; }
 }

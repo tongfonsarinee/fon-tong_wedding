@@ -91,6 +91,10 @@
   function celebrate() {
     if (skipBtn) skipBtn.hidden = true;
     if (block) block.classList.add('is-revealed');
+    if (window.EcardAudio) {
+      window.EcardAudio.sfx('chime');
+      window.EcardAudio.buzz([20, 40, 20, 40, 60]);
+    }
     var rect = row.getBoundingClientRect();
     document.dispatchEvent(new CustomEvent('ecard:burst', {
       detail: { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2, count: 18, confetti: 40 }
@@ -131,6 +135,7 @@
       }
       last = p;
       moves += 1;
+      if (moves % 6 === 0 && window.EcardAudio) window.EcardAudio.buzz(3); // foil grain under the finger
       if (moves % CHECK_EVERY_MOVES === 0 && clearedRatio(ctx, canvas) >= REVEAL_THRESHOLD) reveal(card);
     }
 

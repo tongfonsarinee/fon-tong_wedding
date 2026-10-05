@@ -1,5 +1,5 @@
-// Scroll-driven effects: fade-up reveals, ornaments that draw themselves,
-// progress bar, schedule line that fills with gold, cover photo parallax
+// Scroll-driven effects: fade-up reveals, ornaments that draw themselves, progress bar,
+// schedule line that fills with gold, cover photo parallax, pausing looped animations offscreen
 (function () {
   'use strict';
 
@@ -54,7 +54,7 @@
     if (!coverPhoto || !cover || reduceMotion) return;
     var y = window.scrollY;
     if (y > cover.offsetHeight) return;
-    coverPhoto.style.translate = '0 ' + (y * PARALLAX_RATIO).toFixed(1) + 'px';
+    coverPhoto.style.setProperty('--parallax', (y * PARALLAX_RATIO).toFixed(1) + 'px');
   }
 
   function onScroll() {
@@ -73,7 +73,18 @@
     });
   }
 
+  // [data-pause] sections stop their looping animations while off screen (battery)
+  function initPausing() {
+    var items = document.querySelectorAll('[data-pause]');
+    if (!('IntersectionObserver' in window)) return;
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) { entry.target.classList.toggle('is-offscreen', !entry.isIntersecting); });
+    }, { rootMargin: '120px 0px' });
+    items.forEach(function (el) { observer.observe(el); });
+  }
+
   initReveal();
+  initPausing();
   window.addEventListener('scroll', requestTick, { passive: true });
   window.addEventListener('resize', requestTick);
   onScroll();

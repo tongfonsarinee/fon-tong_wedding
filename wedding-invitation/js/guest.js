@@ -1,4 +1,5 @@
 // Personalised greeting: ?to=<name> fills every [data-guest] element (links built by invite-links.html)
+// and is shared as window.ECARD_GUEST
 (function () {
   'use strict';
 
@@ -22,7 +23,9 @@
     return cleaned || null;
   }
 
-  var name = readGuestName() || DEFAULT_GUEST;
+  var guest = readGuestName();
+  window.ECARD_GUEST = guest; // the wishes form prefills the name from it
+  var name = guest || DEFAULT_GUEST;
   // textContent only — the name is never parsed as HTML
   Array.prototype.forEach.call(document.querySelectorAll('[data-guest]'), function (el) {
     el.textContent = name;

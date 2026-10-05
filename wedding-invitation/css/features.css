@@ -1,0 +1,213 @@
+/* ==========================================================================
+   Interactive features — music disc, wedding-day live pill + schedule badges,
+   online gift, lantern wishes sky, photo booth
+   Behaviour: js/audio.js, js/dayof.js, js/gift.js, js/lanterns.js, js/booth.js
+   ========================================================================== */
+
+/* ---------- Music: a little vinyl that spins while the music box plays ---------- */
+.music {
+  position: fixed; z-index: 12; top: calc(12px + env(safe-area-inset-top)); right: max(12px, calc(50vw - 208px));
+  width: 46px; height: 46px; padding: 0; border: 0; border-radius: 50%; cursor: pointer;
+  display: grid; place-items: center;
+  background: rgba(255, 250, 245, .78); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  box-shadow: 0 0 0 1px rgba(190, 151, 94, .4), 0 10px 22px -10px rgba(74, 36, 20, .6);
+  animation: popIn .5s cubic-bezier(.3, 1.5, .5, 1) both;
+}
+.music__disc {
+  width: 34px; height: 34px; border-radius: 50%;
+  background:
+    radial-gradient(circle, #F0D9A4 0 16%, #B0803F 17% 21%, transparent 22%),
+    repeating-radial-gradient(circle, #2A1309 0 1.6px, #46220F 1.6px 3px);
+  box-shadow: inset 0 0 0 1px rgba(230, 207, 158, .4);
+}
+.music.is-playing .music__disc { animation: discSpin 3.6s linear infinite; }
+.music__note { position: absolute; top: -6px; right: -4px; font-size: 15px; color: var(--gold-deep); opacity: 0; }
+.music.is-playing .music__note { animation: noteFloat 2.4s ease-in-out infinite; }
+/* muted: a rose slash across the disc */
+.music:not(.is-playing)::after { content: ''; position: absolute; width: 2px; height: 34px; border-radius: 2px; background: var(--rosewood); transform: rotate(45deg); }
+.music:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+/* ---------- Wedding-day live pill (above the dock) ---------- */
+.live {
+  position: fixed; z-index: 9; left: 50%; bottom: calc(max(12px, env(safe-area-inset-bottom)) + 74px);
+  width: max-content; max-width: min(404px, calc(100% - 24px));
+  display: flex; align-items: center; gap: 10px; padding: 7px 7px 7px 14px; border-radius: 999px;
+  background: rgba(74, 36, 20, .94); color: #FFF4E4; font-size: 13px;
+  box-shadow: 0 0 0 1px rgba(230, 207, 158, .45), 0 16px 30px -14px rgba(0, 0, 0, .65);
+  transform: translateX(-50%);
+}
+.live__dot { flex: none; width: 9px; height: 9px; border-radius: 50%; background: #FF6F61; animation: livePulse 1.6s ease-out infinite; }
+.live--soon .live__dot, .live--after .live__dot { background: var(--gold-soft); animation: none; }
+.live__text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.live__btn { flex: none; padding: 6px 13px; border-radius: 999px; background: var(--foil); color: var(--ink); font-size: 12px; font-weight: 500; }
+
+/* schedule badges on the day (js/dayof.js) */
+.tl__badge { display: inline-block; margin-top: 8px; padding: 3px 11px; border-radius: 999px; font-size: 11.5px; font-weight: 500; }
+.tl.is-now .tl__badge { background: linear-gradient(130deg, #8A4321, #5A2A14); color: #FFF4E4; }
+.tl.is-now .tl__body { box-shadow: 0 0 0 2px var(--gold), 0 0 34px -6px rgba(230, 207, 158, .95), var(--shadow); }
+.tl.is-now .tl__icon { animation: nowPulse 1.8s ease-in-out infinite; }
+.tl.is-next .tl__badge { background: rgba(234, 194, 184, .55); color: var(--cocoa); }
+.tl.is-done .tl__badge { background: rgba(190, 151, 94, .18); color: var(--muted); }
+.tl.is-done .tl__body, .tl.is-done .tl__icon { opacity: .62; }
+
+/* ---------- Online gift ---------- */
+.gift { padding: 28px 20px 36px; display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center; }
+.gift__note { font-size: 14.5px; line-height: 1.8; color: var(--muted); }
+.gift__card { width: 100%; max-width: 340px; padding: 26px 20px 24px; border-radius: 26px; display: flex; flex-direction: column; align-items: center; gap: 10px; box-shadow: 0 30px 60px -30px rgba(74, 36, 20, .8); }
+.gift__qr { width: 200px; height: auto; padding: 10px; border-radius: 16px; background: #fff; box-shadow: 0 0 0 1px rgba(230, 207, 158, .7); }
+.gift__bank { font-size: 14px; color: var(--gold-soft); }
+.gift__name { font-size: 17px; font-weight: 500; color: #FFF4E4; }
+.gift__account { display: flex; align-items: center; gap: 10px; }
+.gift__number { font-family: var(--serif); font-size: 23px; font-weight: 600; letter-spacing: .08em; color: #FFF4E4; font-variant-numeric: lining-nums; }
+.gift__copy { min-height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid rgba(230, 207, 158, .6); background: rgba(255, 255, 255, .08); color: var(--gold-soft); font: inherit; font-size: 12px; cursor: pointer; }
+
+/* ---------- Wishes: lanterns floating in a night sky ---------- */
+.wishes {
+  position: relative; isolation: isolate; overflow: hidden; min-height: 660px;
+  padding: 46px 20px 28px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 24px;
+  text-align: center; color: #FBEFE2;
+  background: linear-gradient(180deg, #120A1A 0%, #251331 36%, #3F1E1A 74%, #5A2A14 100%);
+}
+.sky { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.sky__stars {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(1.2px 1.2px at 8% 12%, #fff, transparent 60%), radial-gradient(1px 1px at 22% 30%, #fff, transparent 60%),
+    radial-gradient(1.5px 1.5px at 36% 8%, #FFF4DA, transparent 60%), radial-gradient(1px 1px at 48% 22%, #fff, transparent 60%),
+    radial-gradient(1.2px 1.2px at 64% 6%, #fff, transparent 60%), radial-gradient(1px 1px at 72% 28%, #FFF4DA, transparent 60%),
+    radial-gradient(1.6px 1.6px at 90% 18%, #fff, transparent 60%), radial-gradient(1px 1px at 14% 44%, #fff, transparent 60%),
+    radial-gradient(1px 1px at 56% 40%, #fff, transparent 60%), radial-gradient(1.2px 1.2px at 82% 46%, #FFF4DA, transparent 60%),
+    radial-gradient(1px 1px at 30% 58%, #fff, transparent 60%), radial-gradient(1px 1px at 94% 62%, #fff, transparent 60%);
+  animation: twinkleField 4s ease-in-out infinite alternate;
+}
+.sky__moon {
+  position: absolute; top: 40px; right: 30px; width: 52px; height: 52px; border-radius: 50%;
+  background: radial-gradient(circle at 38% 38%, #FFFBEF, #F3DDAA 62%, #D9B676);
+  box-shadow: 0 0 30px 10px rgba(255, 236, 190, .35), 0 0 90px 34px rgba(255, 236, 190, .14);
+}
+.wishes .section-head { position: relative; z-index: 2; }
+/* a pool of night behind the heading so passing lanterns never wash out the text */
+.wishes__head::before { content: ''; position: absolute; inset: -24px -36px; z-index: -1; background: radial-gradient(closest-side, rgba(18, 10, 26, .78), rgba(18, 10, 26, 0)); }
+.wishes .eyebrow, .wishes .laurel { color: var(--gold-soft); }
+.wishes__intro { margin-top: 4px; font-size: 14.5px; font-weight: 300; line-height: 1.8; color: #F2DCC7; }
+.wishes__count { margin-top: 6px; padding: 5px 14px; border-radius: 999px; border: 1px solid rgba(230, 207, 158, .5); font-size: 12.5px; color: var(--gold-soft); }
+
+.lantern {
+  position: absolute; z-index: 1; left: var(--x, 50%); bottom: -70px;
+  width: calc(30px * var(--s, 1)); height: calc(40px * var(--s, 1)); padding: 0; border: 0; background: none;
+  filter: blur(calc((1.15 - var(--s, 1)) * 1.6px));
+  animation: lanternRise var(--dur, 28s) linear var(--delay, 0s) infinite, lanternSway var(--sway, 4s) ease-in-out infinite alternate;
+}
+.lantern--wish { cursor: pointer; }
+.lantern--wish:focus-visible { outline: 2px solid var(--gold-soft); outline-offset: 6px; border-radius: 8px; }
+.lantern__body {
+  position: absolute; inset: 0; border-radius: 42% 42% 22% 22% / 34% 34% 18% 18%;
+  background: radial-gradient(120% 90% at 50% 85%, #FFF6D0 0%, #FFD27A 30%, #F59A45 62%, #C2541F 100%);
+  box-shadow: 0 0 18px 4px rgba(255, 170, 80, .55), 0 0 50px 14px rgba(255, 140, 60, .2);
+}
+.lantern__body::before { content: ''; position: absolute; inset: 0; border-radius: inherit; background: repeating-linear-gradient(90deg, rgba(150, 60, 20, .16) 0 1px, transparent 1px 25%); }
+.lantern__flame {
+  position: absolute; left: 35%; bottom: -3px; width: 30%; height: 18%; border-radius: 50%;
+  background: radial-gradient(circle at 50% 60%, #FFFFFF, #FFE08A 45%, rgba(255, 160, 60, 0) 75%);
+  animation: flicker .22s ease-in-out infinite alternate;
+}
+/* the guest's own lanterns glow blush */
+.lantern--mine .lantern__body { background: radial-gradient(120% 90% at 50% 85%, #FFF5F0 0%, #FFD0C2 32%, #F09A86 64%, #B9573F 100%); box-shadow: 0 0 20px 6px rgba(255, 170, 150, .6), 0 0 54px 16px rgba(255, 140, 120, .22); }
+/* lift-off from the form, then it drifts away (js/lanterns.js switches it to the normal loop) */
+.lantern--release { left: 46%; animation: lanternRelease 9s cubic-bezier(.3, .1, .4, 1) forwards, lanternSway 3s ease-in-out infinite alternate; }
+
+.wish-card {
+  position: absolute; z-index: 4; left: 20px; right: 20px; top: 34%; max-width: 320px; margin: 0 auto;
+  padding: 18px 20px; border-radius: 20px; cursor: pointer; text-align: center;
+  background: rgba(255, 250, 245, .96); color: var(--cocoa);
+  box-shadow: 0 0 0 1px rgba(230, 207, 158, .7), 0 24px 44px -16px rgba(0, 0, 0, .7);
+}
+.wish-card.is-shown { animation: popIn .45s cubic-bezier(.3, 1.5, .5, 1) both; }
+.wish-card b { display: block; font-size: 13.5px; font-weight: 500; color: var(--gold-deep); }
+.wish-card p { margin-top: 6px; font-size: 16px; line-height: 1.7; overflow-wrap: anywhere; }
+
+.wish-form {
+  position: relative; z-index: 2; width: 100%; padding: 18px; border-radius: 24px;
+  display: flex; flex-direction: column; gap: 10px;
+  background: rgba(255, 250, 245, .08); border: 1px solid rgba(230, 207, 158, .35);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+}
+.wish-form input, .wish-form textarea {
+  width: 100%; padding: 12px 14px; border-radius: 14px; border: 1px solid rgba(230, 207, 158, .4);
+  background: rgba(255, 250, 245, .94); font: inherit; font-size: 16px; color: var(--ink); outline: none; resize: none;
+}
+.wish-form input:focus, .wish-form textarea:focus { box-shadow: 0 0 0 4px rgba(230, 207, 158, .35); }
+.wish-form__line { min-height: 40px; border: 0; background: none; color: var(--gold-soft); font: inherit; font-size: 13.5px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+
+/* ---------- Photo booth ---------- */
+.booth { padding: 34px 20px 20px; display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
+.booth__note { font-size: 14.5px; line-height: 1.8; color: var(--muted); }
+.booth__preview { position: relative; width: min(260px, 68vw); margin: 6px 0 4px; transform: rotate(-3deg); }
+.booth__preview canvas { display: block; width: 100%; height: auto; border-radius: 6px; background: #FFF9F3; box-shadow: 0 0 0 1px rgba(190, 151, 94, .3), 0 30px 50px -26px rgba(74, 36, 20, .7); }
+.booth__tag { position: absolute; top: -10px; right: -14px; padding: 4px 12px; border-radius: 999px; background: var(--foil); color: var(--ink); font-size: 11.5px; font-weight: 500; transform: rotate(9deg); box-shadow: 0 8px 16px -8px rgba(154, 112, 56, .9); }
+.booth__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+
+/* background picker (chips built by js/booth.js) */
+.booth__picker { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.booth__picker-label { font-size: 13px; font-weight: 500; color: var(--cocoa); }
+.booth__themes, .booth-modal__themes { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 4px; }
+.theme-chip {
+  min-width: 56px; padding: 2px 0; border: 0; background: none; cursor: pointer;
+  display: inline-flex; flex-direction: column; align-items: center; gap: 5px;
+  font: inherit; font-size: 11.5px; color: var(--muted); white-space: nowrap;
+}
+.theme-chip span {
+  width: 38px; height: 38px; border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(190, 151, 94, .5), 0 6px 12px -6px rgba(74, 36, 20, .5);
+  transition: box-shadow .2s, transform .2s;
+}
+.theme-chip[aria-checked="true"] { color: var(--cocoa); font-weight: 500; }
+.theme-chip[aria-checked="true"] span { transform: scale(1.08); box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--gold), 0 8px 16px -6px rgba(74, 36, 20, .6); }
+.theme-chip:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 8px; }
+.booth-modal__themes .theme-chip { min-width: 50px; color: rgba(242, 220, 199, .75); }
+.booth-modal__themes .theme-chip span { width: 30px; height: 30px; }
+.booth-modal__themes .theme-chip[aria-checked="true"] { color: #FFF4E4; }
+.booth-modal__themes .theme-chip[aria-checked="true"] span { box-shadow: 0 0 0 2px #1A0C06, 0 0 0 4px var(--gold-soft); }
+
+.booth-modal {
+  position: fixed; inset: 0; z-index: 40; padding: 16px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  background: rgba(26, 12, 6, .95); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+}
+.booth-modal__stage { position: relative; height: min(60vh, calc((100vw - 32px) * 1.25)); aspect-ratio: 4 / 5; }
+.booth-modal__stage canvas, .booth-modal__stage img { display: block; width: 100%; height: 100%; object-fit: contain; border-radius: 8px; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .8); }
+.booth-modal__count {
+  position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none;
+  font-family: var(--serif); font-size: 128px; font-weight: 600; color: #fff; text-shadow: 0 6px 30px rgba(0, 0, 0, .5);
+}
+.booth-modal__count.is-tick { animation: countTick .8s ease both; }
+.booth-modal__flash { position: absolute; inset: 0; border-radius: 8px; background: #fff; opacity: 0; pointer-events: none; }
+.booth-modal__flash.is-on { animation: flash .6s ease-out; }
+.booth-modal__bar { display: flex; align-items: center; justify-content: center; gap: 26px; }
+.booth-modal__bar--result { gap: 10px; flex-wrap: wrap; }
+.booth-modal__icon { width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(230, 207, 158, .5); background: rgba(255, 255, 255, .08); color: #FFF4E4; font-size: 24px; line-height: 1; cursor: pointer; }
+.booth-modal__shutter { width: 76px; height: 76px; border-radius: 50%; border: 5px solid rgba(230, 207, 158, .95); background: #FFF9F3; box-shadow: 0 0 0 4px rgba(255, 255, 255, .18); cursor: pointer; transition: transform .15s; }
+.booth-modal__shutter:active { transform: scale(.9); }
+.booth-modal__hint { font-size: 12px; color: rgba(242, 220, 199, .7); }
+.booth-modal__bar--live:not([hidden]) ~ .booth-modal__hint { display: none; }
+
+@keyframes discSpin { to { transform: rotate(360deg); } }
+@keyframes noteFloat { 0% { opacity: 0; transform: translate(0, 4px) rotate(-10deg); } 30% { opacity: 1; } 100% { opacity: 0; transform: translate(6px, -14px) rotate(12deg); } }
+@keyframes livePulse { 0% { box-shadow: 0 0 0 0 rgba(255, 111, 97, .7); } 100% { box-shadow: 0 0 0 9px rgba(255, 111, 97, 0); } }
+@keyframes nowPulse { 0%, 100% { transform: scale(1.06); } 50% { transform: scale(1.14); } }
+@keyframes lanternRise { 0% { translate: 0 0; opacity: 0; } 6% { opacity: 1; } 86% { opacity: 1; } 100% { translate: 0 -940px; opacity: 0; } }
+@keyframes lanternSway { from { rotate: -4deg; } to { rotate: 4deg; } }
+@keyframes lanternRelease { 0% { translate: 0 -250px; scale: 1.6; opacity: 0; } 8% { opacity: 1; } 85% { opacity: 1; } 100% { translate: 0 -980px; scale: .9; opacity: 0; } }
+@keyframes flicker { from { opacity: .75; transform: scale(.9); } to { opacity: 1; transform: scale(1.1); } }
+@keyframes countTick { from { opacity: 0; transform: scale(1.6); } 30% { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(.9); } }
+@keyframes flash { from { opacity: .95; } to { opacity: 0; } }
+
+@media (max-width: 360px) {
+  .live { font-size: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .music, .music.is-playing .music__disc, .music.is-playing .music__note, .live__dot, .tl.is-now .tl__icon,
+  .sky__stars, .lantern__flame, .wish-card.is-shown, .booth-modal__count.is-tick { animation: none; }
+  .lantern { animation: none; bottom: auto; top: var(--y, 40%); }
+}

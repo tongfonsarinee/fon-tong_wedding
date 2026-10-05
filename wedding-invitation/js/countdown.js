@@ -86,7 +86,7 @@
     var timer = null;
 
     function update() {
-      var now = Date.now();
+      var now = window.EcardClock ? window.EcardClock.now() : Date.now(); // ?now= preview (js/dayof.js)
       var remaining = WEDDING_START - now;
       if (remaining > 0) {
         box.hidden = false;

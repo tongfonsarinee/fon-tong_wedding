@@ -1,5 +1,4 @@
-// Decorative effects: tap hearts, heart + confetti bursts ('ecard:burst' from intro.js / scratch.js),
-// and the 3D tilt + light sheen on [data-tilt] (mouse only, so phones keep scrolling normally)
+// Decorative effects: tap hearts, heart + confetti bursts ('ecard:burst' from intro.js / scratch.js)
 (function () {
   'use strict';
 
@@ -8,7 +7,6 @@
   var HEARTS_PER_TAP = 4;
   var TAP_MAX_MOVE_PX = 10;
   var TAP_MAX_MS = 500;
-  var TILT_MAX_DEG = 7;
   var HEART_COLORS = ['#C98476', '#E3A799', '#EAC2B8', '#BE975E', '#D9B676'];
   var CONFETTI_COLORS = ['#E8D19B', '#FFF4D8', '#CFA35D', '#EAC2B8', '#F8E3DD', '#C98476', '#FFFFFF'];
   // Taps on these elements should do their own job, not spawn hearts
@@ -92,26 +90,4 @@
   document.addEventListener('ecard:burst', function (e) {
     burst(e.detail.x, e.detail.y, e.detail.count || 12, 110, e.detail.confetti || 0);
   });
-
-  /* ----- 3D tilt with a light sheen that follows the mouse ----- */
-  if (!reduceMotion) {
-    Array.prototype.forEach.call(document.querySelectorAll('[data-tilt]'), function (el) {
-      el.addEventListener('pointermove', function (e) {
-        if (e.pointerType !== 'mouse') return;
-        var r = el.getBoundingClientRect();
-        var px = (e.clientX - r.left) / r.width;
-        var py = (e.clientY - r.top) / r.height;
-        el.classList.add('is-tilting');
-        el.style.setProperty('--ry', ((px - 0.5) * 2 * TILT_MAX_DEG).toFixed(2) + 'deg');
-        el.style.setProperty('--rx', ((0.5 - py) * 2 * TILT_MAX_DEG).toFixed(2) + 'deg');
-        el.style.setProperty('--mx', (px * 100).toFixed(1) + '%');
-        el.style.setProperty('--my', (py * 100).toFixed(1) + '%');
-      });
-      el.addEventListener('pointerleave', function () {
-        el.classList.remove('is-tilting');
-        el.style.setProperty('--rx', '0deg');
-        el.style.setProperty('--ry', '0deg');
-      });
-    });
-  }
 })();
